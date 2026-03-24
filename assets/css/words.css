@@ -1,0 +1,347 @@
+/* =========================================
+   assets/css/words.css
+   Стилі сторінки слів (words.html)
+   ========================================= */
+
+.words-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 0 0 40px;
+}
+
+/* ════════════════════════════════════
+   HEADER
+   ════════════════════════════════════ */
+.words-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 28px;
+  position: relative;
+}
+
+/* ── Логотип-посилання ── */
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+
+.logo-link:hover {
+  opacity: 0.72;
+}
+
+.logo-small {
+  width: 200px;
+  height: auto;
+  object-fit: contain;
+}
+
+/* ── Перемикач мови ── */
+.lang-toggle {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 4px;
+  gap: 2px;
+  box-shadow: var(--shadow);
+  user-select: none;
+}
+
+.lang-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.06em;
+  padding: 7px 18px;
+  border-radius: var(--radius-pill);
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background var(--transition), color var(--transition);
+}
+
+.lang-btn.active {
+  background: var(--text-primary);
+  color: #fff;
+}
+
+.lang-arrow {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  padding: 0 2px;
+  pointer-events: none;
+}
+
+
+/* ════════════════════════════════════
+   ОСНОВНИЙ ЛЕЙАУТ
+   ════════════════════════════════════ */
+.card-wrap {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 0px 24px 8px;
+}
+
+/* Зовнішній контейнер — весь контент слова */
+.words-layout {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  animation: fadeUp 0.4s ease both;
+}
+
+/* ════════════════════════════════════
+   КАРТКА — тільки слово всередині
+   ════════════════════════════════════ */
+.word-card {
+  background: var(--bg-card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  padding: 28px 36px 28px;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 18px;
+
+  /* Додаємо ці властивості для центрування вмісту картки */
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  text-align: center;
+}
+
+/* Декоративна смужка */
+.word-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1A1A1A 0%, #888 100%);
+}
+/* ── Головне слово ── */
+.word-main {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 4vw, 2rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+/* ════════════════════════════════════
+   БЛОКИ ПОЗА КАРТКОЮ
+   ════════════════════════════════════ */
+
+/* ── Транскрипція ── */
+.word-transcription {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  font-style: italic;
+  letter-spacing: 0.02em;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+/* ── Тоггл ── */
+.show-toggle-wrap {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 18px;
+  padding: 0 4px;
+}
+
+.show-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.show-toggle input[type="checkbox"] {
+  display: none;
+}
+
+.toggle-track {
+  width: 44px;
+  height: 24px;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--border);
+  border-radius: 99px;
+  position: relative;
+  transition: background 0.25s ease, border-color 0.25s ease;
+  flex-shrink: 0;
+}
+
+.toggle-track::after {
+  content: '';
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  top: 2px;
+  left: 2px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.18);
+  transition: transform 0.25s ease;
+}
+
+.show-toggle input:checked + .toggle-track {
+  background: var(--text-primary);
+  border-color: var(--text-primary);
+}
+
+.show-toggle input:checked + .toggle-track::after {
+  transform: translateX(20px);
+}
+
+/* ── Блок перекладу ── */
+.word-translation-block {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.35s ease, margin 0.3s ease;
+  margin-bottom: 0;
+  padding: 0 4px;
+}
+
+.word-translation-block.visible {
+  max-height: 200px;
+  opacity: 1;
+  margin-bottom: 20px;
+}
+
+.word-translation-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 5px;
+}
+
+.word-translation-text {
+  font-family: var(--font-display);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+/* ── Приклади ── */
+.word-examples-block {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 0.5s ease 0.05s, opacity 0.4s ease 0.05s;
+  padding: 0 4px;
+}
+
+.word-examples-block.visible {
+  max-height: 300px;
+  opacity: 1;
+}
+
+.word-examples-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.example-item {
+  padding: 10px 14px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  font-size: 0.91rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  border-left: 3px solid var(--border);
+}
+
+.example-item:last-child {
+  margin-bottom: 0;
+}
+
+/* ════════════════════════════════════
+   КНОПКИ ДІЙ (ЗНАЮ / НЕ ЗНАЮ)
+   ════════════════════════════════════ */
+.action-bar {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  padding: 20px 24px 0;
+  max-width: 520px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.action-bar .btn {
+  flex: 1;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 15px 24px;
+}
+
+/* ── Анімація fadeUp ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ════════════════════════════════════
+   АДАПТИВ
+   ════════════════════════════════════ */
+@media (max-width: 520px) {
+  .words-header {
+    padding: 2px 20px;
+  }
+
+  .word-card {
+    padding: 36px 24px 32px;
+  }
+
+  .word-main {
+    font-size: 1.4rem;
+  }
+
+  .action-bar {
+    padding: 16px 20px 0;
+    gap: 10px;
+  }
+
+  .action-bar .btn {
+    padding: 14px 18px;
+    font-size: 0.88rem;
+  }
+}

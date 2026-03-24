@@ -1,0 +1,159 @@
+/* =========================================
+   assets/css/home.css
+   Стилі головної сторінки (index.html)
+   ========================================= */
+
+.home-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── Декоративні кола фону ── */
+.home-page::after {
+  content: '';
+  position: fixed;
+  top: -160px;
+  right: -160px;
+  width: 520px;
+  height: 520px;
+  background: radial-gradient(circle, #e8e2d8 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.home-page::before {
+  content: '';
+  position: fixed;
+  bottom: -120px;
+  left: -120px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, #ddd8ce 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Центральний контейнер ── */
+.home-inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  animation: fadeUp 0.7s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+/* ── Логотип ── */
+.home-logo-wrap {
+  margin-bottom: 48px;
+}
+
+.home-logo {
+  width: clamp(280px, 52vw, 480px);
+  height: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 6px 24px rgba(0,0,0,0.1));
+  transition: transform 0.3s ease;
+}
+
+.home-logo:hover {
+  transform: scale(1.03);
+}
+
+/* ── Підпис під лого (якщо потрібен) ── */
+.home-tagline {
+  font-family: var(--font-display);
+  font-size: clamp(0.85rem, 2vw, 1rem);
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-top: -36px;
+  margin-bottom: 56px;
+}
+
+/* ── Кнопки навігації ── */
+.home-nav {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.home-nav .btn {
+  min-width: 160px;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 16px 42px;
+  text-transform: uppercase;
+}
+
+.home-nav .btn-words {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--text-primary);
+}
+
+.home-nav .btn-words:hover {
+  background: var(--text-primary);
+  color: #fff;
+}
+
+.home-nav .btn-sentences {
+  background: transparent;
+  color: var(--text-primary);
+  border: 2px solid var(--text-primary);
+}
+
+.home-nav .btn-sentences:hover {
+  background: var(--text-primary);
+  color: #fff;
+}
+
+/* ── Footer підказка ── */
+.home-footer {
+  position: fixed;
+  bottom: 28px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  font-weight: 400;
+}
+
+/* ── Анімація ── */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ── Адаптив ── */
+@media (max-width: 480px) {
+  .home-nav {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .home-nav .btn {
+    width: 100%;
+    min-width: unset;
+  }
+}

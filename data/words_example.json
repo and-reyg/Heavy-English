@@ -1,0 +1,332 @@
+[
+  {
+    "id": 1,
+    "en": "take",
+    "ua": "брати",
+    "transcription": "/teɪk/",
+    "examples": [
+      "Take your time — there's no rush.",
+      "I take the bus every morning."
+    ],
+    "frequency": 1
+  },
+  {
+    "id": 2,
+    "en": "make",
+    "ua": "робити",
+    "transcription": "/meɪk/",
+    "examples": [
+      "She makes coffee every morning.",
+      "Let's make a plan for the weekend."
+    ],
+    "frequency": 2
+  },
+  {
+    "id": 3,
+    "en": "know",
+    "ua": "знати",
+    "transcription": "/noʊ/",
+    "examples": [
+      "Do you know the answer?",
+      "I know him very well."
+    ],
+    "frequency": 3
+  },
+  {
+    "id": 4,
+    "en": "think",
+    "ua": "думати",
+    "transcription": "/θɪŋk/",
+    "examples": [
+      "I think we should leave now.",
+      "Think before you speak."
+    ],
+    "frequency": 4
+  },
+  {
+    "id": 5,
+    "en": "look",
+    "ua": "дивитися",
+    "transcription": "/lʊk/",
+    "examples": [
+      "Look at the stars tonight.",
+      "She looks tired today."
+    ],
+    "frequency": 5
+  },
+  {
+    "id": 6,
+    "en": "want",
+    "ua": "хотіти",
+    "transcription": "/wɒnt/",
+    "examples": [
+      "I want to learn English.",
+      "What do you want for dinner?"
+    ],
+    "frequency": 6
+  },
+  {
+    "id": 7,
+    "en": "give",
+    "ua": "давати",
+    "transcription": "/ɡɪv/",
+    "examples": [
+      "Give me a minute, please.",
+      "He gave her a beautiful gift."
+    ],
+    "frequency": 7
+  },
+  {
+    "id": 8,
+    "en": "use",
+    "ua": "використовувати",
+    "transcription": "/juːz/",
+    "examples": [
+      "Use a dictionary if you're unsure.",
+      "Can I use your phone?"
+    ],
+    "frequency": 8
+  },
+  {
+    "id": 9,
+    "en": "find",
+    "ua": "знаходити",
+    "transcription": "/faɪnd/",
+    "examples": [
+      "I can't find my keys.",
+      "She found a great job."
+    ],
+    "frequency": 9
+  },
+  {
+    "id": 10,
+    "en": "tell",
+    "ua": "розповідати",
+    "transcription": "/tel/",
+    "examples": [
+      "Tell me the truth.",
+      "He told us an interesting story."
+    ],
+    "frequency": 10
+  },
+  {
+    "id": 11,
+    "en": "ask",
+    "ua": "запитувати",
+    "transcription": "/æsk/",
+    "examples": [
+      "Ask her if she needs help.",
+      "Don't be afraid to ask questions."
+    ],
+    "frequency": 11
+  },
+  {
+    "id": 12,
+    "en": "seem",
+    "ua": "здаватися",
+    "transcription": "/siːm/",
+    "examples": [
+      "It seems like a good idea.",
+      "You seem happy today."
+    ],
+    "frequency": 12
+  },
+  {
+    "id": 13,
+    "en": "feel",
+    "ua": "відчувати",
+    "transcription": "/fiːl/",
+    "examples": [
+      "I feel much better now.",
+      "How do you feel about this?"
+    ],
+    "frequency": 13
+  },
+  {
+    "id": 14,
+    "en": "keep",
+    "ua": "тримати / зберігати",
+    "transcription": "/kiːp/",
+    "examples": [
+      "Keep up the good work!",
+      "She keeps a diary every day."
+    ],
+    "frequency": 14
+  },
+  {
+    "id": 15,
+    "en": "leave",
+    "ua": "залишати / виходити",
+    "transcription": "/liːv/",
+    "examples": [
+      "We should leave early tomorrow.",
+      "Don't leave without saying goodbye."
+    ],
+    "frequency": 15
+  },
+  {
+    "id": 16,
+    "en": "mean",
+    "ua": "означати",
+    "transcription": "/miːn/",
+    "examples": [
+      "What does this word mean?",
+      "I didn't mean to hurt you."
+    ],
+    "frequency": 16
+  },
+  {
+    "id": 17,
+    "en": "let",
+    "ua": "дозволяти",
+    "transcription": "/let/",
+    "examples": [
+      "Let me help you with that.",
+      "She lets her kids stay up late."
+    ],
+    "frequency": 17
+  },
+  {
+    "id": 18,
+    "en": "show",
+    "ua": "показувати",
+    "transcription": "/ʃoʊ/",
+    "examples": [
+      "Show me how to do it.",
+      "The results show a clear trend."
+    ],
+    "frequency": 18
+  },
+  {
+    "id": 19,
+    "en": "hear",
+    "ua": "чути",
+    "transcription": "/hɪr/",
+    "examples": [
+      "I can hear music from next door.",
+      "Did you hear the news?"
+    ],
+    "frequency": 19
+  },
+  {
+    "id": 20,
+    "en": "play",
+    "ua": "грати",
+    "transcription": "/pleɪ/",
+    "examples": [
+      "They play football every Sunday.",
+      "She plays the piano beautifully."
+    ],
+    "frequency": 20
+  },
+  {
+    "id": 21,
+    "en": "run",
+    "ua": "бігти / запускати",
+    "transcription": "/rʌn/",
+    "examples": [
+      "He runs five kilometres every day.",
+      "Run the program and check the result."
+    ],
+    "frequency": 21
+  },
+  {
+    "id": 22,
+    "en": "move",
+    "ua": "рухатися / переїжджати",
+    "transcription": "/muːv/",
+    "examples": [
+      "They moved to a new city last year.",
+      "Move the chair closer to the window."
+    ],
+    "frequency": 22
+  },
+  {
+    "id": 23,
+    "en": "live",
+    "ua": "жити",
+    "transcription": "/lɪv/",
+    "examples": [
+      "Where do you live?",
+      "He lives alone in a small apartment."
+    ],
+    "frequency": 23
+  },
+  {
+    "id": 24,
+    "en": "believe",
+    "ua": "вірити",
+    "transcription": "/bɪˈliːv/",
+    "examples": [
+      "I believe you can do it.",
+      "Do you believe in second chances?"
+    ],
+    "frequency": 24
+  },
+  {
+    "id": 25,
+    "en": "hold",
+    "ua": "тримати",
+    "transcription": "/hoʊld/",
+    "examples": [
+      "Hold my hand — the road is icy.",
+      "She held the door open for me."
+    ],
+    "frequency": 25
+  },
+  {
+    "id": 26,
+    "en": "bring",
+    "ua": "приносити",
+    "transcription": "/brɪŋ/",
+    "examples": [
+      "Bring an umbrella — it might rain.",
+      "He brought flowers to the meeting."
+    ],
+    "frequency": 26
+  },
+  {
+    "id": 27,
+    "en": "happen",
+    "ua": "траплятися",
+    "transcription": "/ˈhæp.ən/",
+    "examples": [
+      "What happened to you yesterday?",
+      "Things like this happen all the time."
+    ],
+    "frequency": 27
+  },
+  {
+    "id": 28,
+    "en": "write",
+    "ua": "писати",
+    "transcription": "/raɪt/",
+    "examples": [
+      "Write your name at the top of the page.",
+      "She writes in her journal every evening."
+    ],
+    "frequency": 28
+  },
+  {
+    "id": 29,
+    "en": "provide",
+    "ua": "надавати",
+    "transcription": "/prəˈvaɪd/",
+    "examples": [
+      "The school provides free meals for students.",
+      "Can you provide more details?"
+    ],
+    "frequency": 29
+  },
+  {
+    "id": 30,
+    "en": "stand",
+    "ua": "стояти",
+    "transcription": "/stænd/",
+    "examples": [
+      "Stand up straight when you speak.",
+      "I can't stand the cold weather."
+    ],
+    "frequency": 30
+  }
+]

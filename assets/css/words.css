@@ -158,6 +158,35 @@
   padding: 0 4px;
 }
 
+.word-transcription-wrap {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+  padding: 0 4px;
+}
+
+.speak-btn {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+  /* Додайте ці рядки: */
+  display: inline-flex;
+  align-items: center;
+  transform: translateY(2px); /* Піднімає кнопку на 2 пікселі вгору */
+}
+
+.speak-btn:hover {
+  opacity: 1;
+}
+
+.speak-btn:active {
+  transform: scale(0.9);
+}
+
 /* ── Тоггл ── */
 .show-toggle-wrap {
   display: flex;

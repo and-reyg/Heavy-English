@@ -52,7 +52,12 @@
         </div>
 
         <!-- Транскрипція — поза карткою, видно одразу -->
-        <div class="word-transcription" id="word-transcription">/teɪk/</div>
+        <div class="word-transcription-wrap">
+          <div class="word-transcription" id="word-transcription">/teɪk/</div>
+          <button id="speak-btn" class="speak-btn" aria-label="Play pronunciation">
+            🔊
+          </button>
+        </div>
 
         <!-- Тоггл -->
         <div class="show-toggle-wrap">
@@ -99,7 +104,13 @@
         <div class="word-translation-block" id="ua-translation-block">
           <div class="word-translation-label">English</div>
           <div class="word-translation-text">take</div>
-          <div class="word-transcription" style="margin-top:6px;">/teɪk/</div>
+
+          <div class="word-transcription-wrap">
+            <div class="word-transcription">/teɪk/</div>
+            <button id="speak-btn-ua" class="speak-btn" aria-label="Play pronunciation">
+              🔊
+            </button>
+          </div>
         </div>
 
         <!-- Приклади (приховані) -->

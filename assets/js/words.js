@@ -51,6 +51,8 @@ const wordCard     = document.getElementById('word-card');
 const elWordEn          = document.getElementById('word-en');
 const elWordUaMain      = document.getElementById('word-ua-main');
 const elTranscription   = document.getElementById('word-transcription');
+const speakBtn          = document.getElementById('speak-btn');
+const speakBtnUa        = document.getElementById('speak-btn-ua');
 const elTranslationText = document.getElementById('word-ua');
 
 // ═══════════════════════════════════════════
@@ -59,6 +61,8 @@ const elTranslationText = document.getElementById('word-ua');
 async function init() {
   try {
     const res = await fetch('data/words.json');
+    speakBtn.addEventListener('click', speakWord);
+    speakBtnUa.addEventListener('click', speakWord);
     allWords  = await res.json();
   } catch (e) {
     console.error('Не вдалося завантажити words.json', e);
@@ -298,3 +302,20 @@ function animateCard(knew) {
 
 // ── Старт ─────────────────────────────────
 document.addEventListener('DOMContentLoaded', init);
+
+// говоріння слова
+function speakWord() {
+  if (!currentWord) return;
+
+  const utterance = new SpeechSynthesisUtterance(currentWord.en);
+
+  // англійська вимова
+  utterance.lang = 'en-US';
+
+  // (опціонально) швидкість / тон
+  utterance.rate = 1;
+  utterance.pitch = 1;
+
+  speechSynthesis.cancel(); // зупиняє попереднє
+  speechSynthesis.speak(utterance);
+}

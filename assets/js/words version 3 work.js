@@ -1,46 +1,31 @@
 // =========================================
-// assets/js/words.js  —  Heavy English
-// Логіка тренажера слів v2
+// assets/js/words.js
+// Повна логіка тренажера слів — Heavy English
 // =========================================
 
-// ── Стани (виводяться з quality) ─────────
-// quality null  → 'new'
-// quality 0     → 'weak'
-// quality 1–2   → 'familiar'
-// quality 3+    → 'known'
-
-function qualityToState(q) {
-  if (q === null || q === undefined) return 'new';
-  if (q === 0)  return 'weak';
-  if (q <= 2)   return 'familiar';
-  return 'known';
-}
-
-// Cooldown: мінімум карток між показами одного слова
-function getCooldown(q) {
-  if (q === null || q === undefined) return 0;   // new — показувати одразу
-  if (q === 0)  return 5;   // weak
-  if (q === 1)  return 12;  // familiar 1
-  if (q === 2)  return 25;  // familiar 2
-  //return 60;                // known
-  return 60 + (q - 3) * 20;
-}
-
-// Ваги для вибору групи
-const WEIGHTS = { 
-  new: 4, 
-  weak: 5, 
-  familiar: 3, 
-  known: 0.5 
+// ── Константи станів ──────────────────────
+const STATES = {
+  NEW:      'new',
+  WEAK:     'weak',
+  FAMILIAR: 'familiar',
+  KNOWN:    'known'
 };
 
-const STORAGE_KEY   = 'wordsProgress';
-const CARDIDX_KEY   = 'wordsCardIndex';
+// Ваги для вибору групи (чим більше — тим частіше)
+const WEIGHTS = {
+  [STATES.NEW]:      3,
+  [STATES.WEAK]:     5,
+  [STATES.FAMILIAR]: 2,
+  [STATES.KNOWN]:    0.2   // було 1
+};
+
+const STORAGE_KEY  = 'wordsProgress';
+const RECENT_LIMIT = 20;
 
 // ── Стан додатку ──────────────────────────
 let allWords    = [];
-let progress    = {};   // { "id": { quality, seen, seenAt } }
-let cardIndex   = 0;    // лічильник карток — зростає кожен раз
+let progress    = {};
+let recentIds   = [];
 let currentWord = null;
 let showEnglish = true;
 
@@ -66,13 +51,10 @@ const wordCard     = document.getElementById('word-card');
 const elWordEn          = document.getElementById('word-en');
 const elWordUaMain      = document.getElementById('word-ua-main');
 const elTranscription   = document.getElementById('word-transcription');
+const speakBtn          = document.getElementById('speak-btn');
+const speakBtnUa        = document.getElementById('speak-btn-ua');
 const elTranslationText = document.getElementById('word-ua');
 
-// Кнопки озвучення (необов'язкові елементи)
-const speakBtn   = document.getElementById('speak-btn');
-const speakBtnUa = document.getElementById('speak-btn-ua');
-
-// Блок форм дієслова (необов'язковий)
 const formsBlock = document.getElementById('word-forms-block');
 const formPast   = document.getElementById('form-past');
 const formPP     = document.getElementById('form-pp');
@@ -83,6 +65,8 @@ const formPP     = document.getElementById('form-pp');
 async function init() {
   try {
     const res = await fetch('data/words.json');
+    speakBtn.addEventListener('click', speakWord);
+    speakBtnUa.addEventListener('click', speakWord);
     allWords  = await res.json();
   } catch (e) {
     console.error('Не вдалося завантажити words.json', e);
@@ -93,20 +77,17 @@ async function init() {
   showNextWord();
   updateProgressBar();
 
-  // Мова
-  btnEn.addEventListener('click', () => setLang(true));
-  btnUa.addEventListener('click', () => setLang(false));
-
-  // Відповіді
+  btnEn.addEventListener('click',       () => setLang(true));
+  btnUa.addEventListener('click',       () => setLang(false));
   btnKnow.addEventListener('click',     () => handleAnswer(true));
   btnDontKnow.addEventListener('click', () => handleAnswer(false));
 
-  // Тогглери
   toggleEn.addEventListener('change', () => {
     const v = toggleEn.checked;
     enTranslationBlock.classList.toggle('visible', v);
     enExamplesBlock.classList.toggle('visible', v);
-    if (formsBlock && currentWord?.forms) {
+
+    if (currentWord?.forms && (currentWord.forms.past || currentWord.forms.V3)) {
       formsBlock.classList.toggle('visible', v);
     }
   });
@@ -116,10 +97,6 @@ async function init() {
     uaTranslationBlock.classList.toggle('visible', v);
     uaExamplesBlock.classList.toggle('visible', v);
   });
-
-  // Озвучення
-  if (speakBtn)   speakBtn.addEventListener('click',   speakWord);
-  if (speakBtnUa) speakBtnUa.addEventListener('click', speakWord);
 }
 
 // ═══════════════════════════════════════════
@@ -129,59 +106,36 @@ function loadProgress() {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     progress  = raw ? JSON.parse(raw) : {};
-  } catch { progress = {}; }
-
-  const ci = localStorage.getItem(CARDIDX_KEY);
-  cardIndex = ci ? parseInt(ci, 10) : 0;
+  } catch {
+    progress = {};
+  }
 }
 
 function saveProgress() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(progress));
-  localStorage.setItem(CARDIDX_KEY, String(cardIndex));
 }
 
-function getWordData(id) {
-  return progress[id] ?? { quality: null, seen: 0, seenAt: -9999 };
+function getWordProgress(id) {
+  return progress[id] ?? { state: STATES.NEW, seen: 0, lastSeen: null };
 }
 
 // ═══════════════════════════════════════════
 //  ВИБІР НАСТУПНОГО СЛОВА
 // ═══════════════════════════════════════════
-
-/** Чи минув cooldown для слова */
-function isEligible(word) {
-  if (word.id === currentWord?.id) return false; // поточне слово — завжди виключаємо
-  const d = getWordData(word.id);
-
-  if (cardIndex - d.seenAt < 2) return false; //від гпт
-
-  return (cardIndex - d.seenAt) >= getCooldown(d.quality);
-}
-
-/** Групуємо eligible слова за станом */
-function buildGroups() {
-  const groups = { new: [], weak: [], familiar: [], known: [] };
-
+function groupWords() {
+  const groups = {
+    [STATES.NEW]:      [],
+    [STATES.WEAK]:     [],
+    [STATES.FAMILIAR]: [],
+    [STATES.KNOWN]:    []
+  };
   for (const word of allWords) {
-    if (!isEligible(word)) continue;
-    const state = qualityToState(getWordData(word.id).quality);
+    const state = getWordProgress(word.id).state ?? STATES.NEW;
     groups[state].push(word);
   }
-
-  // Якщо всі слова на cooldown — прибираємо обмеження (крім поточного)
-  const total = Object.values(groups).reduce((s, g) => s + g.length, 0);
-  if (total === 0) {
-    for (const word of allWords) {
-      if (word.id === currentWord?.id) continue;
-      const state = qualityToState(getWordData(word.id).quality);
-      groups[state].push(word);
-    }
-  }
-
   return groups;
 }
 
-/** Зважений вибір групи */
 function pickGroup(groups) {
   const available = Object.entries(WEIGHTS)
     .filter(([state]) => groups[state].length > 0)
@@ -199,34 +153,41 @@ function pickGroup(groups) {
   return available[available.length - 1].state;
 }
 
-function pickNextWord() {
-  const groups = buildGroups();
-  const state  = pickGroup(groups);
-  if (!state || !groups[state].length) return null;
+function pickFromGroup(words) {
+  const filtered = words.filter(w => 
+    !recentIds.includes(w.id) && w.id !== currentWord?.id
+  );
 
-  const pool = groups[state];
+  const pool = filtered.length > 0 ? filtered : words;
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+function pickNextWord() {
+  const groups = groupWords();
+  const state  = pickGroup(groups);
+  if (!state) return null;
+  return pickFromGroup(groups[state]);
+}
+
 // ═══════════════════════════════════════════
-//  ПОКАЗ СЛОВА
+//  РЕНДЕР СЛОВА
 // ═══════════════════════════════════════════
 function showNextWord() {
   const word = pickNextWord();
   if (!word) return;
 
   currentWord = word;
-  cardIndex++;
+  recentIds   = [word.id, ...recentIds].slice(0, RECENT_LIMIT);
   renderWord(word);
 }
 
 function renderWord(word) {
-  // EN поля
+  // EN картка
   elWordEn.textContent          = word.en;
   elTranscription.textContent   = word.transcription;
   elTranslationText.textContent = word.ua;
 
-  // UA поля
+  // UA картка
   elWordUaMain.textContent = word.ua;
 
   const uaTransText = uaTranslationBlock.querySelector('.word-translation-text');
@@ -234,31 +195,37 @@ function renderWord(word) {
   if (uaTransText) uaTransText.textContent = word.en;
   if (uaTransIPA)  uaTransIPA.textContent  = word.transcription;
 
-  // Форми дієслова (якщо є)
-  if (formsBlock) {
-    if (word.forms && (word.forms.past || word.forms.v3)) {
-      if (formPast) formPast.textContent = word.forms.past ? `Past: ${word.forms.past}` : '';
-      if (formPP)   formPP.textContent   = word.forms.v3   ? `V3: ${word.forms.v3}`     : '';
-    } else {
-      if (formPast) formPast.textContent = '';
-      if (formPP)   formPP.textContent   = '';
-    }
+  // ───────── FORMS (ОСЬ ТУТ ДОДАНО) ─────────
+  if (word.forms && (word.forms.past || word.forms.v3)) {
+    const pastForm = word.forms.past ? `Past: ${word.forms.past}` : '';
+    const ppForm   = word.forms.V3 ? `V3: ${word.forms.V3}` : '';
+    
+    formPast.textContent = pastForm;
+    formPP.textContent   = ppForm;
+
+    formsBlock.classList.add('visible');
+  } else {
+    formPast.textContent = '';
+    formPP.textContent   = '';
+    formsBlock.classList.remove('visible');
   }
+  // ──────────────────────────────────────────
 
-  // Приклади
-  fillExamples(enExamplesBlock, word);
-  fillExamples(uaExamplesBlock, word);
+  // Приклади — EN блок
+  const enItems = enExamplesBlock.querySelectorAll('.example-item');
+  word.examples.forEach((ex, i) => {
+    if (enItems[i]) enItems[i].innerHTML = highlightWord(ex, word.en);
+  });
 
+  // Приклади — UA блок
+  const uaItems = uaExamplesBlock.querySelectorAll('.example-item');
+  word.examples.forEach((ex, i) => {
+    if (uaItems[i]) uaItems[i].innerHTML = highlightWord(ex, word.en);
+  });
+
+  updateProgressBar();
   resetToggles();
   applyLangView();
-  updateProgressBar();
-}
-
-function fillExamples(block, word) {
-  const items = block.querySelectorAll('.example-item');
-  word.examples.forEach((ex, i) => {
-    if (items[i]) items[i].innerHTML = highlightWord(ex, word.en);
-  });
 }
 
 function highlightWord(sentence, word) {
@@ -271,47 +238,42 @@ function escapeRegex(str) {
 }
 
 // ═══════════════════════════════════════════
-//  ВІДПОВІДЬ — головна логіка
+//  ВІДПОВІДЬ КОРИСТУВАЧА
 // ═══════════════════════════════════════════
 function handleAnswer(knew) {
   if (!currentWord) return;
 
   const id = currentWord.id;
-  const d  = getWordData(id);
-  const q  = d.quality; // може бути null (new)
+  const p  = getWordProgress(id);
 
   if (knew) {
-    if (q === null) {
-      // Знав з першого разу → fast track: quality=2
-      // Ще 1 "Know" і буде KNOWN
-      d.quality = 2;
-    } else if (q === 0 || q === 1) {
-      // Слабке знання → підвищуємо на 1
-      d.quality = q + 1;
-    } else if (q === 2) {
-      // Familiar → KNOWN
-      d.quality = 3;
-    } else {
-      // KNOWN → залишається, але не нескінченно зростає
-      d.quality = Math.min(q + 1, 5);
+    // якщо слово вже було WEAK → норм, піднімаємо
+    if (p.state === STATES.WEAK) {
+      p.state = STATES.FAMILIAR;
+    } 
+    else if (p.state === STATES.FAMILIAR) {
+      p.state = STATES.KNOWN;
+    } 
+    else if (p.state === STATES.NEW) {
+      // 🔥 якщо одразу знаєш → одразу в FAMILIAR (пропускаємо WEAK)
+      p.state = STATES.FAMILIAR;
     }
   } else {
-    // Не знав
-    if (q === null || q === 0 || q === 1 || q === 2) {
-      // NEW / WEAK / FAMILIAR → падає в WEAK
-      d.quality = 0;
-    } else {
-      // KNOWN → падає в FAMILIAR (не в WEAK — вже вчив)
-      d.quality = 2;
-    }
+    p.state = STATES.WEAK;
   }
 
-  d.seen    = (d.seen || 0) + 1;
-  d.seenAt  = cardIndex;
+  p.seen = (p.seen || 0) + 1;
+  p.lastSeen = Date.now();
 
-  progress[id] = d;
+  progress[id] = p;
   saveProgress();
   animateCard(knew);
+}
+
+function nextStateKnow(state) {
+  const order = [STATES.NEW, STATES.WEAK, STATES.FAMILIAR, STATES.KNOWN];
+  const idx   = order.indexOf(state);
+  return order[Math.min(idx + 1, order.length - 1)];
 }
 
 // ═══════════════════════════════════════════
@@ -319,8 +281,7 @@ function handleAnswer(knew) {
 // ═══════════════════════════════════════════
 function updateProgressBar() {
   if (!allWords.length || !progressFill) return;
-  const known = Object.values(progress)
-    .filter(d => qualityToState(d.quality) === 'known').length;
+  const known = Object.values(progress).filter(p => p.state === STATES.KNOWN).length;
   progressFill.style.width = Math.round((known / allWords.length) * 100) + '%';
 }
 
@@ -343,7 +304,7 @@ function applyLangView() {
 }
 
 // ═══════════════════════════════════════════
-//  ТОГГЛ
+//  ТОГГЛЕР
 // ═══════════════════════════════════════════
 function resetToggles() {
   toggleEn.checked = false;
@@ -352,7 +313,7 @@ function resetToggles() {
   enExamplesBlock.classList.remove('visible');
   uaTranslationBlock.classList.remove('visible');
   uaExamplesBlock.classList.remove('visible');
-  if (formsBlock) formsBlock.classList.remove('visible');
+  formsBlock.classList.remove('visible');
 }
 
 // ═══════════════════════════════════════════
@@ -361,7 +322,7 @@ function resetToggles() {
 function animateCard(knew) {
   const dx = knew ? '60px' : '-60px';
 
-  wordCard.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+  wordCard.style.transition = 'opacity 0.28s ease, transform 0.28s ease';
   wordCard.style.opacity    = '0';
   wordCard.style.transform  = `translateX(${dx})`;
 
@@ -372,26 +333,32 @@ function animateCard(knew) {
 
     showNextWord();
 
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      wordCard.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-      wordCard.style.opacity    = '1';
-      wordCard.style.transform  = 'translateX(0)';
-    }));
-  }, 270);
-}
-
-// ═══════════════════════════════════════════
-//  ОЗВУЧЕННЯ
-// ═══════════════════════════════════════════
-function speakWord() {
-  if (!currentWord) return;
-  const u = new SpeechSynthesisUtterance(currentWord.en);
-  u.lang  = 'en-US';
-  u.rate  = 0.95;
-  u.pitch = 1;
-  speechSynthesis.cancel();
-  speechSynthesis.speak(u);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        wordCard.style.transition = 'opacity 0.32s ease, transform 0.32s ease';
+        wordCard.style.opacity    = '1';
+        wordCard.style.transform  = 'translateX(0)';
+      });
+    });
+  }, 300);
 }
 
 // ── Старт ─────────────────────────────────
 document.addEventListener('DOMContentLoaded', init);
+
+// говоріння слова
+function speakWord() {
+  if (!currentWord) return;
+
+  const utterance = new SpeechSynthesisUtterance(currentWord.en);
+
+  // англійська вимова
+  utterance.lang = 'en-US';
+
+  // (опціонально) швидкість / тон
+  utterance.rate = 1;
+  utterance.pitch = 1;
+
+  speechSynthesis.cancel(); // зупиняє попереднє
+  speechSynthesis.speak(utterance);
+}

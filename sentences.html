@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- sentences.html — Сторінка речень Heavy English -->
+<!-- sentences.html — Sentence trainer — Heavy English -->
 <html lang="uk">
 <head>
   <meta charset="UTF-8" />
@@ -12,136 +12,211 @@
 
   <!-- ══ HEADER ══ -->
   <header class="sentences-header">
-
-    <!-- Логотип → повернення на головну -->
     <a href="index.html" class="logo-link" aria-label="На головну">
-      <img
-        src="assets/img/logo.png"
-        alt="Heavy English"
-        class="logo-small"
-        draggable="false"
-      />
+      <img src="assets/img/logo.png" alt="Heavy English" class="logo-small" draggable="false"/>
     </a>
-
-    <!-- Перемикач мови -->
-    <div class="lang-toggle" role="group" aria-label="Language mode">
-      <button class="lang-btn active" id="btn-en" aria-pressed="true">EN</button>
-      <span class="lang-arrow" aria-hidden="true">↔</span>
-      <button class="lang-btn" id="btn-ua" aria-pressed="false">UA</button>
+    <div class="header-actions">
+      <!--
+      <a class="header-icon-btn"
+        href="https://docs.google.com/document/d/your-doc-id-here/edit"
+        target="_blank" rel="noopener noreferrer"
+        aria-label="Інфо" title="Інфо">
+        <span class="info-icon">i</span>
+      </a>
+      -->
+      <button class="header-icon-btn menu-btn" id="menu-btn" type="button"
+        aria-label="Меню" aria-expanded="false" aria-controls="settings-drawer">
+        <span class="menu-lines" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </span>
+      </button>
     </div>
-
   </header>
 
-  <!-- ══ ПРОГРЕС ══ -->
-  <div class="progress-bar-wrap">
-    <div class="progress-info">
-      <span id="progress-label">Card 1 of 15</span>
-      <span id="progress-pct">7%</span>
+  <!-- ══ DRAWER OVERLAY ══ -->
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+
+  <!-- ══ SETTINGS DRAWER ══ -->
+  <aside class="settings-drawer" id="settings-drawer" aria-label="Налаштування">
+
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-kicker">Sentence Generator</div>
+        <h2 class="drawer-title">Menu</h2>
+      </div>
+      <button class="drawer-close" id="drawer-close" type="button" aria-label="Закрити">×</button>
     </div>
-    <div class="progress-bar" role="progressbar" aria-valuenow="7" aria-valuemin="0" aria-valuemax="100">
-      <div class="progress-fill" id="progress-fill"></div>
-    </div>
-  </div>
 
-  <!-- ══ КАРТКА РЕЧЕННЯ ══ -->
-  <main class="card-wrap">
-    <div class="sentence-card" id="sentence-card">
+    <div class="drawer-content">
 
-      <!-- ─── Режим EN ─── -->
-      <div id="en-mode">
-
-        <!-- Мітка -->
-        <div class="sentence-category">Present Perfect · Intermediate</div>
-
-        <!-- Головне речення (англ.) -->
-        <div class="sentence-main" id="sentence-en">
-          I have never seen anything quite like this before.
+      <section class="filter-block" data-filter-group="time">
+        <div class="filter-block-title">Час</div>
+        <div class="filter-options">
+          <label class="option-chip"><input type="checkbox" value="all" checked/><span>All</span></label>
+          <label class="option-chip"><input type="checkbox" value="present" checked/><span>Present</span></label>
+          <label class="option-chip"><input type="checkbox" value="past" checked/><span>Past</span></label>
+          <label class="option-chip"><input type="checkbox" value="future" checked/><span>Future</span></label>
         </div>
+      </section>
 
-        <!-- Транскрипція/вимова — видно одразу в EN -->
-        <div class="sentence-transcription" id="sentence-transcription">
-          /aɪ həv ˈnevər siːn ˈeniθɪŋ kwaɪt laɪk ðɪs bɪˈfɔːr/
+      <section class="filter-block" data-filter-group="type">
+        <div class="filter-block-title">Тип</div>
+        <div class="filter-options">
+          <label class="option-chip"><input type="checkbox" value="all"/><span>All</span></label>
+          <label class="option-chip"><input type="checkbox" value="simple" checked/><span>Simple</span></label>
+          <label class="option-chip"><input type="checkbox" value="continuous" checked/><span>Continuous</span></label>
+          <label class="option-chip"><input type="checkbox" value="perfect"/><span>Perfect</span></label>
+          <label class="option-chip"><input type="checkbox" value="perfect-continuous"/><span>Perfect Cont.</span></label>
         </div>
+      </section>
 
-        <!-- Переклад (прихований) -->
-        <div class="sentence-translation-block" id="en-translation-block">
-          <div class="sentence-translation-label">Translation</div>
-          <div class="sentence-translation-text" id="sentence-ua">
-            Я ніколи раніше не бачив нічого подібного.
+      <section class="filter-block" data-filter-group="form">
+        <div class="filter-block-title">Форма</div>
+        <div class="filter-options">
+          <label class="option-chip"><input type="checkbox" value="all" checked/><span>All</span></label>
+          <label class="option-chip"><input type="checkbox" value="affirmative" checked/><span>Affirmative</span></label>
+          <label class="option-chip"><input type="checkbox" value="negative" checked/><span>Negative</span></label>
+          <label class="option-chip"><input type="checkbox" value="question" checked/><span>Question</span></label>
+        </div>
+      </section>
+
+      <section class="filter-block" data-filter-group="category">
+        <div class="filter-block-title">Категорія</div>
+        <div class="filter-options">
+          <label class="option-chip"><input type="checkbox" value="all" checked/><span>All</span></label>
+          <label class="option-chip"><input type="checkbox" value="general" checked/><span>General</span></label>
+          <label class="option-chip"><input type="checkbox" value="work" checked/><span>Work</span></label>
+          <label class="option-chip"><input type="checkbox" value="travel" checked/><span>Travel</span></label>
+          <label class="option-chip"><input type="checkbox" value="school" checked/><span>School</span></label>
+          <label class="option-chip"><input type="checkbox" value="home" checked/><span>Home</span></label>
+        </div>
+      </section>
+
+      <section class="filter-block filter-block-switch">
+        <div class="filter-row">
+          <div>
+            <div class="filter-block-title">Показувати правило</div>
+            <div class="filter-note">Формула речення</div>
           </div>
-        </div>
-
-        <!-- Пояснення (приховане) -->
-        <div class="sentence-context-block" id="en-context-block">
-          <div class="sentence-context">
-            <strong>Present Perfect</strong> використовується для опису досвіду, набутого в минулому,
-            без прив'язки до конкретного часу. "Have + Past Participle" — ключова конструкція.
-          </div>
-        </div>
-
-        <!-- Тоггл -->
-        <div class="show-toggle-wrap" style="margin-top:24px;">
-          <label class="show-toggle" for="toggle-en">
-            <input type="checkbox" id="toggle-en" />
-            <span class="toggle-track"></span>
-            Show translation
+          <label class="switch-control" for="toggle-rule">
+            <input type="checkbox" id="toggle-rule" checked/>
+            <span class="switch-track"></span>
           </label>
         </div>
+      </section>
 
+      <section class="filter-block filter-block-switch">
+        <div class="filter-row">
+          <div>
+            <div class="filter-block-title">Тип речення</div>
+            <div class="filter-note">Present Simple Affirmative</div>
+          </div>
+          <label class="switch-control" for="toggle-sentence-type">
+            <input type="checkbox" id="toggle-sentence-type" checked/>
+            <span class="switch-track"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-block filter-block-switch">
+        <div class="filter-row">
+          <div>
+            <div class="filter-block-title">Шкала часу</div>
+            <div class="filter-note">Past / Present / Future</div>
+          </div>
+          <label class="switch-control" for="toggle-scale">
+            <input type="checkbox" id="toggle-scale" checked/>
+            <span class="switch-track"></span>
+          </label>
+        </div>
+      </section>
+
+      <!--
+      <section class="filter-block" data-filter-group="mode">
+        <div class="filter-block-title">Режим</div>
+        <div class="filter-options">
+          <label class="option-chip"><input type="checkbox" value="all" checked/><span>All</span></label>
+          <label class="option-chip"><input type="checkbox" value="easy" checked/><span>Easy</span></label>
+          <label class="option-chip"><input type="checkbox" value="easy-plus" checked/><span>Easy+</span></label>
+        </div>
+      </section>
+      -->
+
+    </div>
+  </aside>
+
+  <!-- ══ MAIN ══ -->
+  <main class="sentences-main">
+    <div class="sentences-layout" id="sentence-card">
+
+      <!-- Тип речення -->
+      <div class="sent-type-wrap" id="sentence-type-block">
+        <span class="sent-type-text" id="sentence-type-text">Present Simple Affirmative</span>
       </div>
 
-      <!-- ─── Режим UA ─── -->
-      <div id="ua-mode" style="display:none;">
-
-        <!-- Мітка -->
-        <div class="sentence-category">Present Perfect · Intermediate</div>
-
-        <!-- Головне речення (укр.) -->
-        <div class="sentence-main" id="sentence-ua-main">
-          Я ніколи раніше не бачив нічого подібного.
+      <!-- Шкала часу -->
+      <div class="sent-scale-wrap" id="tense-scale-block">
+        <!--
+        <div class="tense-legend">
+          <span class="legend-item">
+            <span class="legend-icon legend-icon-check">✓</span><span>Affirmative</span>
+          </span>
+          <span class="legend-item">
+            <span class="legend-icon legend-icon-cross">✕</span><span>Negative</span>
+          </span>
+          <span class="legend-item">
+            <span class="legend-icon legend-icon-question">?</span><span>Question</span>
+          </span>
         </div>
-
-        <!-- Переклад + транскрипція (прихований) -->
-        <div class="sentence-translation-block" id="ua-translation-block">
-          <div class="sentence-translation-label">English</div>
-          <div class="sentence-translation-text">
-            I have never seen anything quite like this before.
-          </div>
-          <div class="sentence-transcription" style="margin-top:8px;">
-            /aɪ həv ˈnevər siːn ˈeniθɪŋ kwaɪt laɪk ðɪs bɪˈfɔːr/
-          </div>
+        -->
+        <div class="tense-scale" id="tense-scale">
+          <div class="tense-scale-track"></div>
+          <div class="tense-scale-points"><span></span></div>
+          <div class="tense-scale-indicator tense-form-affirmative" id="tense-scale-indicator">✓</div>
         </div>
-
-        <!-- Пояснення (приховане) -->
-        <div class="sentence-context-block" id="ua-context-block">
-          <div class="sentence-context">
-            <strong>Present Perfect</strong> використовується для опису досвіду, набутого в минулому,
-            без прив'язки до конкретного часу.
-          </div>
+        <div class="tense-scale-labels">
+          <span>Past</span>
+          <span>Present</span>
+          <span>Future</span>
         </div>
+      </div>
 
-        <!-- Тоггл -->
-        <div class="show-toggle-wrap" style="margin-top:24px;">
-          <label class="show-toggle" for="toggle-ua">
-            <input type="checkbox" id="toggle-ua" />
-            <span class="toggle-track"></span>
-            Show answer
-          </label>
-        </div>
+      <!-- Правило -->
+      <div class="sent-rule-wrap" id="rule-block">
+        <p class="sent-rule-text" id="rule-text">Subject + V1</p>
+      </div>
 
+      <!-- Картка з реченням UA -->
+      <div class="sent-card">
+        <p class="sent-ua-text" id="ua-sentence-text">Loading…</p>
+      </div>
+
+      <!-- Гучномовець -->
+      <div class="sent-speaker-row">
+        <button class="speak-btn" id="speak-btn" title="Listen to sentence" aria-label="Прослухати речення">
+          🔊
+        </button>
+        <span class="speak-hint">Listen</span>
+      </div>
+
+      <!-- Зібране речення -->
+      <div class="answer-preview" id="answer-preview" aria-live="polite">
+        <span class="answer-placeholder">Tap words below to build the sentence</span>
+      </div>
+
+      <!-- Банк слів (scrollable) -->
+      <div class="word-bank-scroll">
+        <div class="word-bank" id="word-bank"></div>
       </div>
 
     </div>
   </main>
 
-  <!-- ══ КНОПКИ ДІЙ ══ -->
-  <div class="action-bar">
-    <button class="btn btn-danger" id="btn-dont-know">
-      ✕ &nbsp;Don't know
-    </button>
-    <button class="btn btn-success" id="btn-know">
-      ✓ &nbsp;Know it
-    </button>
+  <!-- ══ КНОПКИ (fixed bottom) ══ -->
+  <div class="sentence-actions">
+    <button class="btn btn-action-next"  id="btn-next"  type="button">Next</button>
+    <button class="btn btn-action-clear" id="btn-clear" type="button">Clear</button>
+    <button class="btn btn-action-check" id="btn-check" type="button">Check</button>
   </div>
 
   <script src="assets/js/sentences.js"></script>

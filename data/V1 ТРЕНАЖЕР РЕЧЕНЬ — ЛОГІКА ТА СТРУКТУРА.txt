@@ -1,0 +1,256 @@
+ТРЕНАЖЕР РЕЧЕНЬ — ЛОГІКА ТА СТРУКТУРА
+1. ЗАГАЛЬНА ІДЕЯ
+
+Тренажер генерує прості англійські речення на основі граматичних патернів.
+
+Користувач:
+
+бачить речення українською
+збирає англійське речення зі слів (Easy / Easy+)
+перевіряє правильність
+
+Система:
+
+не зберігає готові речення
+генерує їх динамічно з наборів слів і патернів
+2. СТРУКТУРА JSON ФАЙЛІВ
+
+Всі дані лежать окремо, розбиті по типах.
+
+2.1 subjects.json
+
+Містить підмети з граматичною інформацією
+
+Поля:
+
+text — слово
+person — 1 / 2 / 3
+number — singular / plural / both
+2.2 verbs.json
+
+Містить дієслова з формами
+
+Поля:
+
+base — базова форма (work)
+third — для 3 особи (works)
+past — минулий час (worked)
+ing — форма для continuous (working)
+2.3 objects.json
+
+Містить обʼєкти та обставини
+
+Поля:
+
+text — слово/фраза
+type — place / time / object / misc
+category — (наприклад: general / work / travel)
+2.4 auxiliaries.json
+
+Допоміжні слова
+
+Поля:
+
+text — do / does / did / is / are / will
+tense — present / past / future
+form — question / negative
+person — масив (для узгодження)
+number — масив
+2.5 patterns.json
+
+Каркаси речень
+
+Поля:
+
+tense_type — simple / continuous / perfect / perfect_continuous
+tense_time — present / past / future
+form — affirmative / negative / question
+pattern — масив типу ["S","V","O"] або ["AUX","S","V","O"]
+2.6 rules.json (опціонально)
+
+Короткі правила
+
+Поля:
+
+tense_type
+tense_time
+form
+text (коротке правило)
+3. НАЛАШТУВАННЯ (MENU STATE)
+
+Користувач може обрати:
+
+time:
+present
+past
+future
+або всі
+tense_type:
+simple
+continuous
+perfect
+perfect_continuous
+form:
+affirmative
+negative
+question
+category:
+all
+або конкретна (work, travel...)
+mode:
+easy
+easy_plus
+showRule (true/false)
+showType (true/false)
+showTimeline (true/false)
+4. ЛОГІКА ГЕНЕРАЦІЇ РЕЧЕННЯ
+КРОК 1. Вибір патерна
+
+Фільтруються patterns:
+
+по tense_type
+по tense_time
+по form
+
+Випадково вибирається один патерн
+
+КРОК 2. Вибір слів
+
+Вибирається:
+
+subject з subjects.json
+verb з verbs.json
+object з objects.json (з урахуванням category)
+КРОК 3. Вибір auxiliary (якщо є)
+
+Якщо патерн містить "AUX":
+
+шукається відповідний auxiliary:
+по tense
+по form
+по person і number підмета
+КРОК 4. Формування речення
+
+Проходження по pattern масиву:
+
+S → subject.text
+V → форма дієслова:
+
+якщо Present Simple + 3 особа → third
+якщо Past → past
+якщо Continuous → ing
+інакше → base
+
+AUX → auxiliary.text
+O → object.text
+
+Все зʼєднується в рядок через пробіл
+
+КРОК 5. Генерація українського речення
+
+(або береться заготовлене, або простий переклад)
+На MVP можна:
+
+мати окремий ua-шаблон
+або статичні варіанти
+КРОК 6. Підготовка слів для UI
+
+Береться правильне речення:
+
+розбивається на слова
+Easy:
+тільки правильні слова
+перемішані
+Easy+:
+додаються distractors (зайві слова)
+типові помилки:
+is / are
+неправильна форма дієслова
+КРОК 7. Відображення
+
+Користувач:
+
+бачить слова
+клікає або перетягує
+формує речення
+КРОК 8. Перевірка
+
+Порівнюється:
+
+порядок слів
+точний збіг з правильною відповіддю
+КРОК 9. Фідбек
+якщо правильно → показати правильний варіант
+якщо ні → підсвітити помилку
+5. ІНТЕРФЕЙС
+5.1 Верхня панель
+зліва: лого
+справа: кнопка меню
+5.2 Меню (overlay / sidebar)
+
+Опції:
+
+Time (checkbox):
+present
+past
+future
+Tense type:
+simple
+continuous
+perfect
+perfect continuous
+Form:
+affirmative
+negative
+question
+Category:
+all
+work
+travel
+etc
+Mode:
+easy
+easy+
+Switchers:
+show rule
+show type
+show timeline
+5.3 Основний екран
+Верх (опціонально)
+тип речення:
+"Present Simple — Question"
+Таймлайн (опціонально)
+
+Горизонтальна лінія:
+
+ліва частина — past
+центр — present
+права — future
+іконка:
+? для question
+− для negative
+✔ для affirmative
+Центр
+українське речення
+Нижче
+зона складання речення
+слова (кнопки або draggable)
+Низ
+кнопка:
+Check / Next
+6. ПРИНЦИПИ
+1 речення = 1 граматична ідея
+мінімум слів → максимум повторення
+простота > гнучкість
+без гейміфікації
+без акаунтів
+все локально
+7. МАСШТАБУВАННЯ
+
+Щоб додати новий час:
+
+додати verbs форми
+додати auxiliaries
+додати patterns
+
+І все працює без змін логіки

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<!-- sentences.html — Sentence generator mockup for Heavy English -->
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sentences — Heavy English</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/sentences.css" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png" />
+</head>
+<body class="sentences-page">
+
+  <header class="sentences-header">
+    <a href="index.html" class="logo-link" aria-label="На головну">
+      <img
+        src="assets/img/logo.png"
+        alt="Heavy English"
+        class="logo-small"
+        draggable="false"
+      />
+    </a>
+
+    <div class="header-actions">
+      <a
+        class="header-icon-btn"
+        href="https://docs.google.com/document/d/your-doc-id-here/edit"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Відкрити Google Doc з інформацією"
+        title="Інфо"
+      >
+        <span class="info-icon">i</span>
+      </a>
+
+      <button
+        class="header-icon-btn menu-btn"
+        id="menu-btn"
+        type="button"
+        aria-label="Відкрити меню"
+        aria-controls="settings-drawer"
+        aria-expanded="false"
+      >
+        <span class="menu-lines" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+
+  <aside
+    class="settings-drawer"
+    id="settings-drawer"
+    aria-label="Налаштування генератора речень"
+  >
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-kicker">Sentence Generator</div>
+        <h2 class="drawer-title">Menu</h2>
+      </div>
+      <button
+        class="drawer-close"
+        id="drawer-close"
+        type="button"
+        aria-label="Закрити меню"
+      >
+        ×
+      </button>
+    </div>
+
+    <div class="drawer-content">
+      <section class="filter-block" data-filter-group="time">
+        <div class="filter-block-title">Час</div>
+        <div class="filter-options">
+          <label class="option-chip">
+            <input type="checkbox" value="all" checked />
+            <span>All</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="present" checked />
+            <span>Present</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="past" checked />
+            <span>Past</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="future" checked />
+            <span>Future</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-block" data-filter-group="type">
+        <div class="filter-block-title">Тип</div>
+        <div class="filter-options">
+          <label class="option-chip">
+            <input type="checkbox" value="all" checked />
+            <span>All</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="simple" checked />
+            <span>Simple</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="continuous" checked />
+            <span>Continuous</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="perfect" checked />
+            <span>Perfect</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="perfect-continuous" checked />
+            <span>Perfect Continuous</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-block" data-filter-group="form">
+        <div class="filter-block-title">Форма</div>
+        <div class="filter-options">
+          <label class="option-chip">
+            <input type="checkbox" value="all" checked />
+            <span>All</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="affirmative" checked />
+            <span>Affirmative</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="negative" checked />
+            <span>Negative</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="question" checked />
+            <span>Question</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-block" data-filter-group="category">
+        <div class="filter-block-title">Категорія</div>
+        <div class="filter-options">
+          <label class="option-chip">
+            <input type="checkbox" value="all" checked />
+            <span>All</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="general" checked />
+            <span>General</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="work" checked />
+            <span>Work</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="travel" checked />
+            <span>Travel</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="school" checked />
+            <span>School</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="home" checked />
+            <span>Home</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-block" data-filter-group="situation">
+        <div class="filter-block-title">Ситуація</div>
+        <div class="filter-options" id="situation-options"></div>
+      </section>
+
+      <!--
+      <section class="filter-block" data-filter-group="mode">
+        <div class="filter-block-title">Режим</div>
+        <div class="filter-options">
+          <label class="option-chip">
+            <input type="checkbox" value="all" checked />
+            <span>All</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="easy" checked />
+            <span>Easy</span>
+          </label>
+          <label class="option-chip">
+            <input type="checkbox" value="easy-plus" checked />
+            <span>Easy+</span>
+          </label>
+        </div>
+      </section>
+      -->
+
+      <section class="filter-block filter-block-switch">
+        <div class="filter-row">
+          <div>
+            <div class="filter-block-title">Показувати правило</div>
+            <div class="filter-note">Пояснення формули речення</div>
+          </div>
+          <label class="switch-control" for="toggle-rule">
+            <input type="checkbox" id="toggle-rule" checked />
+            <span class="switch-track"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-block filter-block-switch">
+        <div class="filter-row">
+          <div>
+            <div class="filter-block-title">Показувати тип речення</div>
+            <div class="filter-note">Наприклад: Present Simple Affirmative</div>
+          </div>
+          <label class="switch-control" for="toggle-sentence-type">
+            <input type="checkbox" id="toggle-sentence-type" checked />
+            <span class="switch-track"></span>
+          </label>
+        </div>
+      </section>
+
+      <section class="filter-block filter-block-switch">
+        <div class="filter-row">
+          <div>
+            <div class="filter-block-title">Показувати шкалу tense</div>
+            <div class="filter-note">Past / Present / Future</div>
+          </div>
+          <label class="switch-control" for="toggle-scale">
+            <input type="checkbox" id="toggle-scale" checked />
+            <span class="switch-track"></span>
+          </label>
+        </div>
+      </section>
+    </div>
+  </aside>
+
+  <main class="sentences-main">
+    <section class="sentence-builder" id="sentence-builder">
+      <div class="builder-block builder-block-type" id="sentence-type-block">
+        <div class="sentence-type-text" id="sentence-type-text">Present Simple Affirmative</div>
+      </div>
+
+      <div class="builder-block builder-block-scale" id="tense-scale-block">
+        <!--
+        <div class="tense-legend">
+          <span class="legend-item">
+            <span class="legend-icon legend-icon-check">✓</span>
+            <span>Affirmative</span>
+          </span>
+          <span class="legend-item">
+            <span class="legend-icon legend-icon-cross">✕</span>
+            <span>Negative</span>
+          </span>
+          <span class="legend-item">
+            <span class="legend-icon legend-icon-question">?</span>
+            <span>Question</span>
+          </span>
+        </div>
+        -->
+        <div class="tense-scale" id="tense-scale">
+          <div class="tense-scale-track"></div>
+          <div class="tense-scale-points">
+            <span></span>
+          </div>
+          <div class="tense-scale-indicator tense-form-affirmative" id="tense-scale-indicator">✓</div>
+        </div>
+
+        <div class="tense-scale-labels">
+          <span>Past</span>
+          <span>Present</span>
+          <span>Future</span>
+        </div>
+      </div>
+
+      <div class="builder-block" id="rule-block">
+        <!--<div class="builder-label">Правило</div>-->
+        <p class="builder-rule" id="rule-text">
+          Subject + base verb (V1) / verb + -s/-es for he, she, it
+        </p>
+      </div>
+
+      <div class="builder-block">
+        <!--<div class="builder-label">Українською</div>-->
+        <p class="builder-ua-sentence" id="ua-sentence-text">Я працюю в офісі.</p>
+      </div>
+
+      <div class="builder-block">
+        <!--<div class="builder-label">Твоя відповідь</div>-->
+        <div class="answer-preview" id="answer-preview" aria-live="polite">
+          <span class="answer-placeholder">Натискай на слова нижче, щоб зібрати речення</span>
+        </div>
+      </div>
+
+      <div class="builder-block builder-block-bank">
+        <!--<div class="builder-label">Слова для складання</div>-->
+        <div class="word-bank" id="word-bank" aria-label="Word bank"></div>
+      </div>
+    </section>
+  </main>
+
+  <div class="sentence-actions">
+    <button class="btn btn-outline" id="btn-next" type="button">Наступне</button>
+    <button class="btn btn-outline" id="btn-clear" type="button">Очистити</button>
+    <button class="btn btn-primary" id="btn-check" type="button">Перевірити</button>
+  </div>
+
+  <script src="assets/js/sentences.js"></script>
+</body>
+</html>

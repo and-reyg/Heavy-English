@@ -16,11 +16,11 @@ const WEIGHTS = {
   [STATES.NEW]:      3,
   [STATES.WEAK]:     5,
   [STATES.FAMILIAR]: 2,
-  [STATES.KNOWN]:    1
+  [STATES.KNOWN]:    0.2   // було 1
 };
 
 const STORAGE_KEY  = 'wordsProgress';
-const RECENT_LIMIT = 5;
+const RECENT_LIMIT = 20;
 
 // ── Стан додатку ──────────────────────────
 let allWords    = [];
@@ -55,6 +55,10 @@ const speakBtn          = document.getElementById('speak-btn');
 const speakBtnUa        = document.getElementById('speak-btn-ua');
 const elTranslationText = document.getElementById('word-ua');
 
+const formsBlock = document.getElementById('word-forms-block');
+const formPast   = document.getElementById('form-past');
+const formPP     = document.getElementById('form-pp');
+
 // ═══════════════════════════════════════════
 //  ІНІЦІАЛІЗАЦІЯ
 // ═══════════════════════════════════════════
@@ -82,6 +86,10 @@ async function init() {
     const v = toggleEn.checked;
     enTranslationBlock.classList.toggle('visible', v);
     enExamplesBlock.classList.toggle('visible', v);
+
+    if (currentWord?.forms && (currentWord.forms.past || currentWord.forms.V3)) {
+      formsBlock.classList.toggle('visible', v);
+    }
   });
 
   toggleUa.addEventListener('change', () => {
@@ -146,8 +154,11 @@ function pickGroup(groups) {
 }
 
 function pickFromGroup(words) {
-  const filtered = words.filter(w => !recentIds.includes(w.id));
-  const pool     = filtered.length > 0 ? filtered : words;
+  const filtered = words.filter(w => 
+    !recentIds.includes(w.id) && w.id !== currentWord?.id
+  );
+
+  const pool = filtered.length > 0 ? filtered : words;
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
@@ -184,6 +195,22 @@ function renderWord(word) {
   if (uaTransText) uaTransText.textContent = word.en;
   if (uaTransIPA)  uaTransIPA.textContent  = word.transcription;
 
+  // ───────── FORMS (ОСЬ ТУТ ДОДАНО) ─────────
+  if (word.forms && (word.forms.past || word.forms.v3)) {
+    const pastForm = word.forms.past ? `Past: ${word.forms.past}` : '';
+    const ppForm   = word.forms.V3 ? `V3: ${word.forms.V3}` : '';
+    
+    formPast.textContent = pastForm;
+    formPP.textContent   = ppForm;
+
+    formsBlock.classList.add('visible');
+  } else {
+    formPast.textContent = '';
+    formPP.textContent   = '';
+    formsBlock.classList.remove('visible');
+  }
+  // ──────────────────────────────────────────
+
   // Приклади — EN блок
   const enItems = enExamplesBlock.querySelectorAll('.example-item');
   word.examples.forEach((ex, i) => {
@@ -219,8 +246,23 @@ function handleAnswer(knew) {
   const id = currentWord.id;
   const p  = getWordProgress(id);
 
-  p.state   = knew ? nextStateKnow(p.state) : STATES.WEAK;
-  p.seen    = (p.seen || 0) + 1;
+  if (knew) {
+    // якщо слово вже було WEAK → норм, піднімаємо
+    if (p.state === STATES.WEAK) {
+      p.state = STATES.FAMILIAR;
+    } 
+    else if (p.state === STATES.FAMILIAR) {
+      p.state = STATES.KNOWN;
+    } 
+    else if (p.state === STATES.NEW) {
+      // 🔥 якщо одразу знаєш → одразу в FAMILIAR (пропускаємо WEAK)
+      p.state = STATES.FAMILIAR;
+    }
+  } else {
+    p.state = STATES.WEAK;
+  }
+
+  p.seen = (p.seen || 0) + 1;
   p.lastSeen = Date.now();
 
   progress[id] = p;
@@ -271,6 +313,7 @@ function resetToggles() {
   enExamplesBlock.classList.remove('visible');
   uaTranslationBlock.classList.remove('visible');
   uaExamplesBlock.classList.remove('visible');
+  formsBlock.classList.remove('visible');
 }
 
 // ═══════════════════════════════════════════

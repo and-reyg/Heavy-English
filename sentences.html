@@ -7,6 +7,7 @@
   <title>Sentences — Heavy English</title>
   <link rel="stylesheet" href="assets/css/main.css" />
   <link rel="stylesheet" href="assets/css/sentences.css" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
 </head>
 <body class="sentences-page">
 
@@ -38,7 +39,6 @@
 
   <!-- ══ SETTINGS DRAWER ══ -->
   <aside class="settings-drawer" id="settings-drawer" aria-label="Налаштування">
-
     <div class="drawer-header">
       <div>
         <div class="drawer-kicker">Sentence Generator</div>
@@ -109,7 +109,7 @@
         <div class="filter-row">
           <div>
             <div class="filter-block-title">Тип речення</div>
-            <div class="filter-note">Present Simple Affirmative</div>
+            <div class="filter-note">Present Simple, Affirmative</div>
           </div>
           <label class="switch-control" for="toggle-sentence-type">
             <input type="checkbox" id="toggle-sentence-type" checked/>
@@ -126,6 +126,20 @@
           </div>
           <label class="switch-control" for="toggle-scale">
             <input type="checkbox" id="toggle-scale" checked/>
+            <span class="switch-track"></span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Авто-озвучення після правильної відповіді -->
+      <section class="filter-block filter-block-switch">
+        <div class="filter-row">
+          <div>
+            <div class="filter-block-title">Авто-озвучення</div>
+            <div class="filter-note">Прочитати речення після вірної відповіді</div>
+          </div>
+          <label class="switch-control" for="toggle-autospeak">
+            <input type="checkbox" id="toggle-autospeak"/>
             <span class="switch-track"></span>
           </label>
         </div>
@@ -151,7 +165,7 @@
 
       <!-- Тип речення -->
       <div class="sent-type-wrap" id="sentence-type-block">
-        <span class="sent-type-text" id="sentence-type-text">Present Simple Affirmative</span>
+        <span class="sent-type-text" id="sentence-type-text">Present Simple, Affirmative</span>
       </div>
 
       <!-- Шкала часу -->
@@ -191,12 +205,12 @@
         <p class="sent-ua-text" id="ua-sentence-text">Loading…</p>
       </div>
 
-      <!-- Гучномовець -->
+      <!-- Гучномовець + фідбек -->
       <div class="sent-speaker-row">
         <button class="speak-btn" id="speak-btn" title="Listen to sentence" aria-label="Прослухати речення">
           🔊
         </button>
-        <span class="speak-hint">Listen</span>
+        <span class="sent-feedback" id="sent-feedback"></span>
       </div>
 
       <!-- Зібране речення -->
@@ -212,11 +226,13 @@
     </div>
   </main>
 
-  <!-- ══ КНОПКИ (fixed bottom) ══ -->
+  <!-- ══ КНОПКИ (fixed bottom, обмежені max-width) ══ -->
   <div class="sentence-actions">
-    <button class="btn btn-action-next"  id="btn-next"  type="button">Next</button>
-    <button class="btn btn-action-clear" id="btn-clear" type="button">Clear</button>
-    <button class="btn btn-action-check" id="btn-check" type="button">Check</button>
+    <div class="sentence-actions-inner">
+      <button class="btn btn-action-next"  id="btn-next"  type="button">Next</button>
+      <button class="btn btn-action-clear" id="btn-clear" type="button">Clear</button>
+      <button class="btn btn-action-check" id="btn-check" type="button">Check</button>
+    </div>
   </div>
 
   <script src="assets/js/sentences.js"></script>

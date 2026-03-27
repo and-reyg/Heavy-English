@@ -318,13 +318,19 @@
    КНОПКИ ДІЙ (ЗНАЮ / НЕ ЗНАЮ)
    ════════════════════════════════════ */
 .action-bar {
+  position: fixed;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+
   display: flex;
   gap: 14px;
   justify-content: center;
-  padding: 20px 24px 0;
-  max-width: 520px;
-  margin: 0 auto;
+
   width: 100%;
+  max-width: 520px;
+  padding: 0 16px;
+  z-index: 100;
 }
 
 .action-bar .btn {

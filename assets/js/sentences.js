@@ -71,6 +71,8 @@ let currentWordBank = [];
 let autoSpeak       = false;
 let feedbackTimer   = null;
 
+let sentenceQueue = [];
+
 const filters = {
   time:     new Set(['present','past','future']),
   type:     new Set(['simple','continuous']),
@@ -154,6 +156,8 @@ function handleFilterChange(group, input, block) {
   if (allInput) allInput.checked = valueInps.every(i => i.checked);
 
   filters[group] = new Set(valueInps.filter(i => i.checked).map(i => i.value));
+  // Скидаємо чергу при зміні фільтрів
+  sentenceQueue = [];
   animateCard(nextSentence);
 }
 
@@ -173,17 +177,14 @@ function nextSentence() {
   const pool = getPool();
   if (!pool.length) { showEmpty(); return; }
 
-  let candidates = pool.filter(s => !seenIds.includes(s.id));
-  if (!candidates.length) { seenIds = []; candidates = pool; }
-  if (currentSentence && candidates.length > 1) {
-    candidates = candidates.filter(s => s.id !== currentSentence.id);
+  // Якщо черга пуста або змінився пул → створюємо нову
+  if (!sentenceQueue.length) {
+    sentenceQueue = shuffleArr([...pool]);
   }
 
-  const sentence = candidates[Math.floor(Math.random() * candidates.length)];
+  // Беремо наступне речення
+  const sentence = sentenceQueue.pop();
   currentSentence = sentence;
-
-  seenIds = [sentence.id, ...seenIds].slice(0, SEEN_LIMIT);
-  try { localStorage.setItem(SEEN_KEY, JSON.stringify(seenIds)); } catch {}
 
   clearSel();
   clearFeedback();

@@ -13,14 +13,19 @@
 .sentences-header {
   display: flex; align-items: center;
   justify-content: space-between;
-  padding: 6px 20px 4px;
+  
   position: relative; 
   z-index: 40;
-  margin-bottom: -30px;
+
+  padding-top: 30px;     /* Верх */
+  padding-right: 20px;  /* Право */
+  padding-bottom: 30px;  /* Низ */
+  padding-left: 20px;   /* Ліво */
+
 }
 .logo-link { display: flex; align-items: center; transition: opacity var(--transition); text-decoration: none; }
 .logo-link:hover { opacity: 0.72; }
-.logo-small { width: 200px; height: auto; object-fit: contain; }
+.logo-small { width: 170px; height: auto; object-fit: contain; }
 
 .header-actions { display: flex; align-items: center; gap: 10px; }
 .header-icon-btn {
@@ -152,7 +157,7 @@
 
 /* ── Правило ── */
 .sent-rule-wrap { padding: 0 4px 10px; }
-.sent-rule-text { font-size: 0.96rem; font-style: italic; color: var(--text-muted); text-align: center; line-height: 1.5; }
+.sent-rule-text { font-size: 1.1rem; font-style: italic; color: var(--text-muted); text-align: center; line-height: 1.5; }
 
 /* ── Картка UA (мінімальні падінги) ── */
 .sent-card {
@@ -213,7 +218,7 @@
   display: inline-flex; align-items: center;
   min-height: 34px; padding: 6px 12px; border-radius: 999px;
   background: rgba(26,26,26,0.09); color: var(--text-primary);
-  font-size: 1.04rem; font-weight: 700; line-height: 1;
+  font-size: 1.2rem; font-weight: 700; line-height: 1;
 }
 
 /* ── Word bank ── */
@@ -231,7 +236,7 @@
   min-height: 50px; padding: 8px 4px;
   border-radius: var(--radius-sm); background: var(--bg-soft);
   border: 1.5px solid var(--border); color: var(--text-primary);
-  font-family: var(--font-display); font-size: 1.02rem; font-weight: 700;
+  font-family: var(--font-display); font-size: 1.2rem; font-weight: 700;
   line-height: 1.2; text-align: center; cursor: pointer;
   transition: background var(--transition), color var(--transition),
               border-color var(--transition), transform var(--transition), opacity var(--transition);
@@ -289,16 +294,24 @@
 
 /* ════════════════════════════════════  АДАПТИВ  */
 @media (max-width: 520px) {
-  .sentences-header { padding: 4px 16px 2px; }
-  .logo-small       { width: 200px; }
+  .sentences-header {
+    padding-top: 19px;     /* Верх */
+    padding-right: 20px;  /* Право */
+    padding-bottom: 5px;  /* Низ */
+    padding-left: 20px;   /* Ліво */ 
+    }
+  .logo-small       { width: 150px; }
   .sentences-main   { padding: 4px 16px 8px; }
   .sent-card        { padding: 8px 14px 6px; }
-  .word-chip        { font-size: 0.94rem; min-height: 46px; }
+  .word-chip        { font-size: 1.1rem; min-height: 46px; }
   .sentence-actions { padding: 10px 16px 16px; }
   .sentence-actions .btn { font-size: 0.82rem; min-height: 46px; }
+  .sent-rule-text  {
+    font-size: 1 rem;
+  }
 }
 @media (max-width: 380px) {
-  .logo-small     { width: 150px; }
+  .logo-small     { width: 120px; }
   .sent-type-text { font-size: 0.95rem; }
   .sent-ua-text   { font-size: 1.05rem; }
   .word-chip      { font-size: 0.85rem; min-height: 42px; }

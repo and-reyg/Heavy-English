@@ -17,9 +17,11 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
   position: relative;
-  margin-bottom: -10px;
+  padding-top: 20px;    /* Регулюйте цей відступ від верхнього краю екрана */
+  padding-bottom: 28px;  /* Відступ від логотипа до наступного елемента (картки) */
+  padding-left: 28px;   /* Боковий відступ зліва */
+  padding-right: 28px;  /* Боковий відступ справа */
 }
 
 /* ── Логотип-посилання ── */
@@ -36,7 +38,7 @@
 }
 
 .logo-small {
-  width: 200px;
+  width: 150px;
   height: auto;
   object-fit: contain;
 }
@@ -359,9 +361,14 @@
    АДАПТИВ
    ════════════════════════════════════ */
 @media (max-width: 520px) {
+  /*
   .words-header {
-    padding: 2px 20px;
+    padding-top: 12px;    
+    padding-bottom: 8px;  
+    padding-left: 20px;   
+    padding-right: 20px;  
   }
+    */
 
   .word-card {
     padding: 36px 24px 32px;

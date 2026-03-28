@@ -150,14 +150,14 @@
   background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   transition: left 0.35s cubic-bezier(0.4,0,0.2,1); z-index: 2;
 }
-.tense-scale-labels { display: flex; justify-content: space-between; font-size: 1.01rem; font-weight: 600; color: var(--text-secondary); padding: 0 12px; }
+.tense-scale-labels { display: flex; justify-content: space-between; font-size: 1.15rem; font-weight: 600; color: var(--text-secondary); padding: 0 12px; }
 .tense-form-affirmative { border: 2px solid var(--success) !important; color: var(--success); }
 .tense-form-negative    { border: 2px solid var(--danger)  !important; color: var(--danger); }
 .tense-form-question    { border: 2px solid var(--text-primary) !important; color: var(--text-primary); }
 
 /* ── Правило ── */
 .sent-rule-wrap { padding: 0 4px 10px; }
-.sent-rule-text { font-size: 1.1rem; font-style: italic; color: var(--text-muted); text-align: center; line-height: 1.5; }
+.sent-rule-text { font-size: 1.25rem; font-style: italic; color: var(--text-muted); text-align: center; line-height: 1.5; }
 
 /* ── Картка UA (мінімальні падінги) ── */
 .sent-card {
@@ -171,7 +171,7 @@
 }
 .sent-ua-text {
   font-family: var(--font-display);
-  font-size: clamp(1.15rem, 3.5vw, 1.45rem); font-weight: 700;
+  font-size: clamp(1.25rem, 3.5vw, 1.45rem); font-weight: 700;
   color: var(--text-primary); text-align: center; line-height: 1.4; margin: 0;
 }
 

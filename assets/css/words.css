@@ -152,7 +152,7 @@
 /* ── Транскрипція ── */
 .word-transcription {
   font-family: var(--font-body);
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 400;
   color: var(--text-muted);
   font-style: italic;
@@ -306,7 +306,7 @@
   background: var(--bg-soft);
   border-radius: var(--radius-sm);
   margin-bottom: 8px;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
   line-height: 1.55;
   border-left: 3px solid var(--border);
@@ -424,7 +424,7 @@
 .word-forms-inline {
   display: flex;
   gap: 12px;            /* проміжок між Past та V3 */
-  font-size: 0.95rem;
+  font-size: 1.25rem;
   color: var(--text-secondary);
 }
 

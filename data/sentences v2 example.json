@@ -1,0 +1,61 @@
+[
+  {"id":1,"level":"A","group_id":1,"distractors":["work","working","is"],"en":"I work at home","ua":"Я працюю вдома","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"work","category":"general"},
+  {"id":2,"level":"A","group_id":1,"distractors":["works","am","working"],"en":"I do not work at home","ua":"Я не працюю вдома","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"work","category":"general"},
+  {"id":3,"level":"A","group_id":1,"distractors":["does","am","working"],"en":"Do I work at home?","ua":"Я працюю вдома?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"work","category":"general"},
+  {"id":4,"level":"A","group_id":1,"distractors":["work","working","is"],"en":"He works at home","ua":"Він працює вдома","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"he","verb":"work","category":"general"},
+  {"id":5,"level":"A","group_id":1,"distractors":["works","is","working"],"en":"They work at home","ua":"Вони працюють вдома","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"work","category":"general"},
+
+  {"id":6,"level":"A","group_id":2,"distractors":["drink","drinking","is"],"en":"I drink coffee","ua":"Я п'ю каву","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"drink","category":"general"},
+  {"id":7,"level":"A","group_id":2,"distractors":["drinks","am","drinking"],"en":"I do not drink coffee","ua":"Я не п'ю каву","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"drink","category":"general"},
+  {"id":8,"level":"A","group_id":2,"distractors":["does","am","drinking"],"en":"Do I drink coffee?","ua":"Я п'ю каву?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"drink","category":"general"},
+  {"id":9,"level":"A","group_id":2,"distractors":["drink","drinking","is"],"en":"She drinks coffee","ua":"Вона п'є каву","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"she","verb":"drink","category":"general"},
+  {"id":10,"level":"A","group_id":2,"distractors":["drinks","is","drinking"],"en":"They drink coffee","ua":"Вони п'ють каву","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"drink","category":"general"},
+
+  {"id":11,"level":"A","group_id":3,"distractors":["eat","eating","is"],"en":"I eat breakfast","ua":"Я їм сніданок","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"eat","category":"general"},
+  {"id":12,"level":"A","group_id":3,"distractors":["eats","am","eating"],"en":"I do not eat breakfast","ua":"Я не їм сніданок","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"eat","category":"general"},
+  {"id":13,"level":"A","group_id":3,"distractors":["does","am","eating"],"en":"Do I eat breakfast?","ua":"Я їм сніданок?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"eat","category":"general"},
+  {"id":14,"level":"A","group_id":3,"distractors":["eat","eating","is"],"en":"He eats breakfast","ua":"Він їсть сніданок","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"he","verb":"eat","category":"general"},
+  {"id":15,"level":"A","group_id":3,"distractors":["eats","is","eating"],"en":"They eat breakfast","ua":"Вони їдять сніданок","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"eat","category":"general"},
+
+  {"id":16,"level":"A","group_id":4,"distractors":["go","going","is"],"en":"I go to work","ua":"Я йду на роботу","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"go","category":"general"},
+  {"id":17,"level":"A","group_id":4,"distractors":["goes","am","going"],"en":"I do not go to work","ua":"Я не йду на роботу","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"go","category":"general"},
+  {"id":18,"level":"A","group_id":4,"distractors":["does","am","going"],"en":"Do I go to work?","ua":"Я йду на роботу?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"go","category":"general"},
+  {"id":19,"level":"A","group_id":4,"distractors":["go","going","is"],"en":"He goes to work","ua":"Він йде на роботу","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"he","verb":"go","category":"general"},
+  {"id":20,"level":"A","group_id":4,"distractors":["goes","is","going"],"en":"They go to work","ua":"Вони йдуть на роботу","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"go","category":"general"},
+
+  {"id":21,"level":"A","group_id":5,"distractors":["watch","watching","is"],"en":"I watch TV","ua":"Я дивлюся телевізор","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"watch","category":"general"},
+  {"id":22,"level":"A","group_id":5,"distractors":["watches","am","watching"],"en":"I do not watch TV","ua":"Я не дивлюся телевізор","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"watch","category":"general"},
+  {"id":23,"level":"A","group_id":5,"distractors":["does","am","watching"],"en":"Do I watch TV?","ua":"Я дивлюся телевізор?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"watch","category":"general"},
+  {"id":24,"level":"A","group_id":5,"distractors":["watch","watching","is"],"en":"She watches TV","ua":"Вона дивиться телевізор","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"she","verb":"watch","category":"general"},
+  {"id":25,"level":"A","group_id":5,"distractors":["watches","is","watching"],"en":"They watch TV","ua":"Вони дивляться телевізор","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"watch","category":"general"},
+
+  {"id":26,"level":"A","group_id":6,"distractors":["read","reading","is"],"en":"I read books","ua":"Я читаю книги","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"read","category":"general"},
+  {"id":27,"level":"A","group_id":6,"distractors":["reads","am","reading"],"en":"I do not read books","ua":"Я не читаю книги","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"read","category":"general"},
+  {"id":28,"level":"A","group_id":6,"distractors":["does","am","reading"],"en":"Do I read books?","ua":"Я читаю книги?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"read","category":"general"},
+  {"id":29,"level":"A","group_id":6,"distractors":["read","reading","is"],"en":"He reads books","ua":"Він читає книги","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"he","verb":"read","category":"general"},
+  {"id":30,"level":"A","group_id":6,"distractors":["reads","is","reading"],"en":"They read books","ua":"Вони читають книги","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"read","category":"general"},
+
+  {"id":31,"level":"A","group_id":7,"distractors":["listen","listening","is"],"en":"I listen to music","ua":"Я слухаю музику","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"listen","category":"general"},
+  {"id":32,"level":"A","group_id":7,"distractors":["listens","am","listening"],"en":"I do not listen to music","ua":"Я не слухаю музику","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"listen","category":"general"},
+  {"id":33,"level":"A","group_id":7,"distractors":["does","am","listening"],"en":"Do I listen to music?","ua":"Я слухаю музику?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"listen","category":"general"},
+  {"id":34,"level":"A","group_id":7,"distractors":["listen","listening","is"],"en":"She listens to music","ua":"Вона слухає музику","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"she","verb":"listen","category":"general"},
+  {"id":35,"level":"A","group_id":7,"distractors":["listens","is","listening"],"en":"They listen to music","ua":"Вони слухають музику","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"listen","category":"general"},
+
+  {"id":36,"level":"A","group_id":8,"distractors":["play","playing","is"],"en":"I play games","ua":"Я граю в ігри","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"play","category":"general"},
+  {"id":37,"level":"A","group_id":8,"distractors":["plays","am","playing"],"en":"I do not play games","ua":"Я не граю в ігри","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"play","category":"general"},
+  {"id":38,"level":"A","group_id":8,"distractors":["does","am","playing"],"en":"Do I play games?","ua":"Я граю в ігри?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"play","category":"general"},
+  {"id":39,"level":"A","group_id":8,"distractors":["play","playing","is"],"en":"He plays games","ua":"Він грає в ігри","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"he","verb":"play","category":"general"},
+  {"id":40,"level":"A","group_id":8,"distractors":["plays","is","playing"],"en":"They play games","ua":"Вони грають в ігри","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"play","category":"general"},
+
+  {"id":41,"level":"A","group_id":9,"distractors":["use","using","is"],"en":"I use a phone","ua":"Я користуюсь телефоном","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"use","category":"general"},
+  {"id":42,"level":"A","group_id":9,"distractors":["uses","am","using"],"en":"I do not use a phone","ua":"Я не користуюсь телефоном","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"use","category":"general"},
+  {"id":43,"level":"A","group_id":9,"distractors":["does","am","using"],"en":"Do I use a phone?","ua":"Я користуюсь телефоном?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"use","category":"general"},
+  {"id":44,"level":"A","group_id":9,"distractors":["use","using","is"],"en":"She uses a phone","ua":"Вона користується телефоном","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"she","verb":"use","category":"general"},
+  {"id":45,"level":"A","group_id":9,"distractors":["uses","is","using"],"en":"They use a phone","ua":"Вони користуються телефоном","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"use","category":"general"},
+
+  {"id":46,"level":"A","group_id":10,"distractors":["study","studying","is"],"en":"I study English","ua":"Я вивчаю англійську","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"I","verb":"study","category":"general"},
+  {"id":47,"level":"A","group_id":10,"distractors":["studies","am","studying"],"en":"I do not study English","ua":"Я не вивчаю англійську","tense_time":"present","tense_type":"simple","form":"negative","subject":"I","verb":"study","category":"general"},
+  {"id":48,"level":"A","group_id":10,"distractors":["does","am","studying"],"en":"Do I study English?","ua":"Я вивчаю англійську?","tense_time":"present","tense_type":"simple","form":"question","subject":"I","verb":"study","category":"general"},
+  {"id":49,"level":"A","group_id":10,"distractors":["study","studying","is"],"en":"He studies English","ua":"Він вивчає англійську","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"he","verb":"study","category":"general"},
+  {"id":50,"level":"A","group_id":10,"distractors":["studies","is","studying"],"en":"They study English","ua":"Вони вивчають англійську","tense_time":"present","tense_type":"simple","form":"affirmative","subject":"they","verb":"study","category":"general"}
+]

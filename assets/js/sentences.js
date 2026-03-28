@@ -35,7 +35,6 @@ const RULES = {
   'future-perfect-question':                'Will + subject + have + V3?',
 };
 
-// Мотиваційні фрази при правильній відповіді
 const CORRECT_PHRASES = [
   'Amazing! 🎉', 'Perfect!', 'Awesome! 🔥', 'Nailed it!',
   'Brilliant!', 'Spot on! ✓', 'Great job!', 'Excellent!',
@@ -52,32 +51,33 @@ const DISTRACTORS = [
   'not','too','also','even','back','ever','only','much','well',
 ];
 
-const CAT_MAP = {
-  general:'general', habits:'general', hobbies:'general', leisure:'general',
-  sports:'general',  social:'general', nature:'general',  food:'general',
-  skills:'general',  shopping:'general',
-  work:'work', travel:'travel', school:'school', home:'home',
-};
-
-const SEEN_KEY   = 'sentencesSeen';
-const SEEN_LIMIT = 40;
-
+// ── Стан ──────────────────────────────────
 let allSentences    = [];
-let seenIds         = [];
 let currentSentence = null;
 let selectedWords   = [];
 let selectedIndexes = [];
 let currentWordBank = [];
 let autoSpeak       = false;
 let feedbackTimer   = null;
+let useGroups       = false;
 
-let sentenceQueue = [];
+// ── Цикл показу ───────────────────────────
+// cycleQueue     — масив ID поточного циклу (перемішаний), ще не показані
+// shownInCycle   — Set ID що вже були показані в цьому циклі
+// processedGroups — Set group_id що вже були «активовані» в цьому циклі
+// groupQueue     — масив об'єктів речень що стоять в черзі (сестринські)
+let cycleQueue       = [];
+let shownInCycle     = new Set();
+let processedGroups  = new Set();
+let groupQueue       = [];
 
+// Фільтри — category заповнюється динамічно
 const filters = {
+  level:    new Set(['B']),
   time:     new Set(['present','past','future']),
   type:     new Set(['simple','continuous']),
   form:     new Set(['affirmative','negative','question']),
-  category: new Set(['general','work','travel','school','home']),
+  category: new Set(),
 };
 
 // ═══════════════════════════════════════════
@@ -92,35 +92,34 @@ async function init() {
     return;
   }
 
-  try {
-    const raw = localStorage.getItem(SEEN_KEY);
-    seenIds = raw ? JSON.parse(raw) : [];
-  } catch { seenIds = []; }
-
+  buildCategoryFilter();
   setupFilters();
   nextSentence();
 
   document.getElementById('btn-next').addEventListener('click',  () => animateCard(nextSentence));
   document.getElementById('btn-clear').addEventListener('click', () => { clearSel(); renderAnswer(); renderWordBank(); clearFeedback(); });
   document.getElementById('btn-check').addEventListener('click', checkAnswer);
-  document.getElementById('speak-btn').addEventListener('click', speakSentence);
+  document.getElementById('speak-btn').addEventListener('click', () => speakSentence());
 
-  // Drawer
   document.getElementById('menu-btn').addEventListener('click',     () => setDrawer(true));
   document.getElementById('drawer-close').addEventListener('click',  () => setDrawer(false));
   document.getElementById('drawer-overlay').addEventListener('click',() => setDrawer(false));
   document.addEventListener('keydown', e => { if (e.key === 'Escape') setDrawer(false); });
 
-  // Visibility switches
   bindSwitch('toggle-rule',          'rule-block');
   bindSwitch('toggle-sentence-type', 'sentence-type-block');
   bindSwitch('toggle-scale',         'tense-scale-block');
 
-  // Auto-speak switch
   const autoSpeakEl = document.getElementById('toggle-autospeak');
-  if (autoSpeakEl) {
-    autoSpeakEl.addEventListener('change', () => { autoSpeak = autoSpeakEl.checked; });
-  }
+  if (autoSpeakEl) autoSpeakEl.addEventListener('change', () => { autoSpeak = autoSpeakEl.checked; });
+
+  const groupsEl = document.getElementById('toggle-groups');
+  if (groupsEl) groupsEl.addEventListener('change', () => {
+    useGroups  = groupsEl.checked;
+    // При перемиканні режиму скидаємо лише групові черги, цикл не чіпаємо
+    groupQueue      = [];
+    processedGroups = new Set();
+  });
 }
 
 function bindSwitch(id, targetId) {
@@ -132,11 +131,33 @@ function bindSwitch(id, targetId) {
 }
 
 // ═══════════════════════════════════════════
+//  КАТЕГОРІЇ — динамічно з JSON
+// ═══════════════════════════════════════════
+function buildCategoryFilter() {
+  const unique = [...new Set(allSentences.map(s => s.category))].sort();
+  filters.category = new Set(unique);
+
+  const container = document.getElementById('category-options');
+  if (!container) return;
+
+  const cap = str => str.charAt(0).toUpperCase() + str.slice(1);
+  container.innerHTML =
+    `<label class="option-chip"><input type="checkbox" value="all" checked/><span>All</span></label>` +
+    unique.map(cat =>
+      `<label class="option-chip"><input type="checkbox" value="${escHtml(cat)}" checked/><span>${escHtml(cap(cat))}</span></label>`
+    ).join('');
+
+  const block = container.closest('[data-filter-group]');
+  if (block) block.addEventListener('change', e => handleFilterChange('category', e.target, block));
+}
+
+// ═══════════════════════════════════════════
 //  ФІЛЬТРИ
 // ═══════════════════════════════════════════
 function setupFilters() {
   document.querySelectorAll('[data-filter-group]').forEach(block => {
     const group = block.dataset.filterGroup;
+    if (group === 'category') return;
     if (!filters[group]) return;
     block.addEventListener('change', e => handleFilterChange(group, e.target, block));
   });
@@ -156,53 +177,154 @@ function handleFilterChange(group, input, block) {
   if (allInput) allInput.checked = valueInps.every(i => i.checked);
 
   filters[group] = new Set(valueInps.filter(i => i.checked).map(i => i.value));
-  // Скидаємо чергу при зміні фільтрів
-  sentenceQueue = [];
+
+  // Зміна фільтра → повний скид циклу
+  resetCycle();
   animateCard(nextSentence);
 }
 
 // ═══════════════════════════════════════════
-//  ВИБІР РЕЧЕННЯ
+//  ЦИКЛ
 // ═══════════════════════════════════════════
+
+/** Повністю скидає цикл і будує нову перемішану чергу */
+function resetCycle(pool) {
+  const p = pool || getPool();
+  cycleQueue      = shuffleArr(p.map(s => s.id));
+  shownInCycle    = new Set();
+  processedGroups = new Set();
+  groupQueue      = [];
+}
+
 function getPool() {
   return allSentences.filter(s =>
-    filters.time.has(s.tense_time)
+    filters.level.has(s.level)
+    && filters.time.has(s.tense_time)
     && filters.type.has(s.tense_type)
     && filters.form.has(s.form)
-    && filters.category.has(CAT_MAP[s.category] ?? 'general')
+    && filters.category.has(s.category)
   );
 }
 
+// ═══════════════════════════════════════════
+//  ВИБІР НАСТУПНОГО РЕЧЕННЯ
+//
+//  Логіка циклу:
+//  1. Кожне речення показується рівно 1 раз за цикл
+//  2. Коли всі показані — цикл перезапускається (новий shuffle)
+//
+//  Логіка груп (useGroups = true):
+//  - Якщо поточний group_id НЕ порожній і ця група ще не активована:
+//      → беремо всі сестринські з пулу (включно з поточним)
+//      → перемішуємо
+//      → беремо рандомно 2-4 для показу підряд
+//      → решту сестринських позначаємо як "пропущені" (не показуємо в цьому циклі)
+//      → позначаємо групу як активовану
+//  - Якщо group_id вже активована → пропускаємо цю ID
+// ═══════════════════════════════════════════
 function nextSentence() {
+  // Пріоритет 1: сестринські речення з активованої групи
+  if (useGroups && groupQueue.length > 0) {
+    const s = groupQueue.shift();
+    shownInCycle.add(s.id);
+    currentSentence = s;
+    clearSel(); clearFeedback(); renderSentence();
+    return;
+  }
+
   const pool = getPool();
   if (!pool.length) { showEmpty(); return; }
 
-  // Якщо черга пуста або змінився пул → створюємо нову
-  if (!sentenceQueue.length) {
-    sentenceQueue = shuffleArr([...pool]);
+  // Будуємо цикл якщо порожній
+  if (cycleQueue.length === 0) {
+    resetCycle(pool);
+    // Якщо після reset теж порожньо — показати "немає"
+    if (cycleQueue.length === 0) { showEmpty(); return; }
   }
 
-  // Беремо наступне речення
-  const sentence = sentenceQueue.pop();
-  currentSentence = sentence;
+  // Шукаємо наступне валідне речення з черги
+  while (cycleQueue.length > 0) {
+    const id = cycleQueue.shift();
 
-  clearSel();
-  clearFeedback();
-  renderSentence();
+    // Вже показане в цьому циклі — пропускаємо
+    if (shownInCycle.has(id)) continue;
+
+    const sentence = pool.find(s => s.id === id);
+    // Не в поточному пулі (фільтри змінились) — пропускаємо
+    if (!sentence) continue;
+
+    const gid = sentence.group_id;
+
+    // ── Режим груп вимкнений, або group_id пустий → простий показ ──
+    if (!useGroups || !gid) {
+      shownInCycle.add(id);
+      currentSentence = sentence;
+      clearSel(); clearFeedback(); renderSentence();
+      return;
+    }
+
+    // ── Режим груп увімкнений, group_id є ──
+
+    // Ця група вже була активована → пропускаємо ID
+    if (processedGroups.has(gid)) {
+      shownInCycle.add(id); // позначаємо щоб більше не натрапляти
+      continue;
+    }
+
+    // Нова група — активуємо
+    processedGroups.add(gid);
+
+    // Всі сестринські з пулу що ще не показані (включно з поточним)
+    const siblings = pool.filter(s => s.group_id === gid && !shownInCycle.has(s.id));
+    const shuffled = shuffleArr(siblings);
+
+    // Рандомно 2..4 (але не більше ніж є)
+    const count  = Math.min(Math.floor(Math.random() * 3) + 2, shuffled.length);
+    const toShow = shuffled.slice(0, count);
+    const toSkip = shuffled.slice(count);
+
+    // Сестринських, яких не будемо показувати → позначаємо як "пропущені"
+    toSkip.forEach(s => shownInCycle.add(s.id));
+
+    // Видаляємо всіх сестринських з cycleQueue (показуємо тільки через groupQueue)
+    const siblingIds = new Set(siblings.map(s => s.id));
+    cycleQueue = cycleQueue.filter(qid => !siblingIds.has(qid));
+
+    if (toShow.length === 0) continue; // дуже рідкий edge-case
+
+    // Перше речення показуємо зараз, решту кладемо в groupQueue
+    const first = toShow[0];
+    groupQueue   = toShow.slice(1);
+
+    shownInCycle.add(first.id);
+    currentSentence = first;
+    clearSel(); clearFeedback(); renderSentence();
+    return;
+  }
+
+  // Цикл вичерпано — починаємо новий
+  resetCycle(pool);
+  if (cycleQueue.length === 0) { showEmpty(); return; }
+
+  // Показуємо перше з нового циклу (без рекурсії)
+  const id = cycleQueue.shift();
+  const sentence = pool.find(s => s.id === id);
+  if (!sentence) { showEmpty(); return; }
+
+  shownInCycle.add(id);
+  currentSentence = sentence;
+  clearSel(); clearFeedback(); renderSentence();
 }
 
 // ═══════════════════════════════════════════
-//  РЕНДЕР
+//  РЕНДЕР РЕЧЕННЯ
 // ═══════════════════════════════════════════
 function renderSentence() {
   const s = currentSentence;
   if (!s) return;
 
   document.getElementById('sentence-type-text').textContent = genTypeLabel(s);
-
-  const ruleKey = `${s.tense_time}-${s.tense_type}-${s.form}`;
-  document.getElementById('rule-text').textContent = RULES[ruleKey] ?? '';
-
+  document.getElementById('rule-text').textContent = RULES[`${s.tense_time}-${s.tense_type}-${s.form}`] ?? '';
   document.getElementById('ua-sentence-text').textContent = s.ua;
 
   updateScale(s);
@@ -216,7 +338,6 @@ function genTypeLabel(s) {
   const T = { present:'Present', past:'Past', future:'Future' };
   const Y = { simple:'Simple', continuous:'Continuous', perfect:'Perfect', 'perfect-continuous':'Perfect Continuous' };
   const F = { affirmative:'Affirmative', negative:'Negative', question:'Question' };
-  // Формат: "Present Simple, Affirmative"
   return `${T[s.tense_time]||s.tense_time} ${Y[s.tense_type]||s.tense_type}, ${F[s.form]||s.form}`;
 }
 
@@ -225,9 +346,9 @@ function updateScale(s) {
   const SYM = { affirmative:'✓', negative:'✕', question:'?' };
   const ind = document.getElementById('tense-scale-indicator');
   if (!ind) return;
-  ind.style.left   = POS[s.tense_time] ?? '50%';
-  ind.textContent  = SYM[s.form] ?? '✓';
-  ind.className    = `tense-scale-indicator tense-form-${s.form}`;
+  ind.style.left  = POS[s.tense_time] ?? '50%';
+  ind.textContent = SYM[s.form] ?? '✓';
+  ind.className   = `tense-scale-indicator tense-form-${s.form}`;
 }
 
 // ═══════════════════════════════════════════
@@ -238,13 +359,32 @@ function buildWordBank(s) {
   const minSlots = Math.max(9, Math.ceil(answer.length / 3) * 3);
   const needed   = minSlots - answer.length;
 
-  const answerLow  = new Set(answer.map(w => w.toLowerCase()));
-  const pool       = shuffleArr(DISTRACTORS.filter(d => !answerLow.has(d.toLowerCase())));
-  const distractors = pool.slice(0, needed);
+  const answerLow = new Set(answer.map(w => w.toLowerCase()));
 
-  while (answer.length + distractors.length < 9) {
-    distractors.push(DISTRACTORS[Math.floor(Math.random() * DISTRACTORS.length)]);
+  const jsonDist = Array.isArray(s.distractors)
+    ? s.distractors.filter(d => !answerLow.has(String(d).toLowerCase()))
+    : [];
+
+  let distractors;
+
+  if (jsonDist.length === 0) {
+    distractors = shuffleArr(
+      DISTRACTORS.filter(d => !answerLow.has(d.toLowerCase()))
+    ).slice(0, needed);
+
+  } else if (jsonDist.length >= needed) {
+    distractors = shuffleArr(jsonDist).slice(0, needed);
+
+  } else {
+    const usedLow = new Set(jsonDist.map(d => d.toLowerCase()));
+    const extra   = shuffleArr(
+      DISTRACTORS.filter(d =>
+        !answerLow.has(d.toLowerCase()) && !usedLow.has(d.toLowerCase())
+      )
+    ).slice(0, needed - jsonDist.length);
+    distractors = [...jsonDist, ...extra];
   }
+
   return shuffleArr([...answer, ...distractors]);
 }
 
@@ -273,6 +413,7 @@ function renderAnswer() {
   }
   let words = [...selectedWords];
 
+  // якщо питання — додаємо ? до останнього слова (не чіпаємо за вказівкою #5)
   if (currentSentence?.form === 'question' && words.length) {
     words[words.length - 1] += '?';
   }
@@ -294,7 +435,6 @@ function renderWordBank() {
 }
 
 function toggleWord(index) {
-  // Якщо вже є результат перевірки — ігноруємо кліки
   const preview = document.getElementById('answer-preview');
   if (preview.classList.contains('is-correct')) return;
 
@@ -308,7 +448,6 @@ function toggleWord(index) {
   }
   renderAnswer();
   renderWordBank();
-  // Знімаємо фідбек при зміні відповіді
   if (preview.classList.contains('is-wrong')) {
     preview.classList.remove('is-wrong');
     clearFeedback();
@@ -321,9 +460,9 @@ function toggleWord(index) {
 function checkAnswer() {
   if (!currentSentence || !selectedWords.length) return;
 
-  const answer    = getAnswerWords(currentSentence.en);
+  const answer = getAnswerWords(currentSentence.en);
 
-  // якщо питання — додаємо ? до останнього слова
+  // якщо питання — додаємо ? до останнього слова (не чіпаємо за вказівкою #5)
   let userAnswer = [...selectedWords];
   if (currentSentence.form === 'question' && userAnswer.length) {
     userAnswer[userAnswer.length - 1] += '?';
@@ -346,7 +485,6 @@ function checkAnswer() {
 
   if (isCorrect) {
     if (autoSpeak) {
-      // Спочатку озвучуємо — потім переходимо
       speakSentence(() => {
         feedbackTimer = setTimeout(() => animateCard(nextSentence), 500);
       });
@@ -359,15 +497,12 @@ function checkAnswer() {
 function showFeedback(isCorrect, answer) {
   const el = document.getElementById('sent-feedback');
   if (!el) return;
-
   clearFeedback();
-
   if (isCorrect) {
     const phrase = CORRECT_PHRASES[Math.floor(Math.random() * CORRECT_PHRASES.length)];
     el.textContent = phrase;
     el.className   = 'sent-feedback is-correct';
   } else {
-    // Показуємо правильне речення
     el.textContent = '→ ' + answer.join(' ');
     el.className   = 'sent-feedback is-wrong';
   }
@@ -384,47 +519,31 @@ function arrEq(a, b) {
 }
 
 // ═══════════════════════════════════════════
-//  ОЧИСТИТИ
+//  ОЧИСТИТИ / ОЗВУЧЕННЯ / DRAWER / EMPTY
 // ═══════════════════════════════════════════
-function clearSel() {
-  selectedWords   = [];
-  selectedIndexes = [];
-}
+function clearSel() { selectedWords = []; selectedIndexes = []; }
 
-// ═══════════════════════════════════════════
-//  ГУЧНОМОВЕЦЬ
-// ═══════════════════════════════════════════
 function speakSentence(onEnd) {
   if (!currentSentence) { if (onEnd) onEnd(); return; }
-  const u  = new SpeechSynthesisUtterance(currentSentence.en);
-  u.lang   = 'en-US';
-  u.rate   = 0.92;
-  u.pitch  = 1;
+  const u = new SpeechSynthesisUtterance(currentSentence.en);
+  u.lang = 'en-US'; u.rate = 0.92; u.pitch = 1;
   if (onEnd) u.onend = onEnd;
   speechSynthesis.cancel();
   speechSynthesis.speak(u);
 }
 
-// ═══════════════════════════════════════════
-//  DRAWER
-// ═══════════════════════════════════════════
 function setDrawer(open) {
   document.getElementById('settings-drawer').classList.toggle('open', open);
   document.getElementById('drawer-overlay').hidden = !open;
   document.getElementById('menu-btn').setAttribute('aria-expanded', String(open));
 }
 
-// ═══════════════════════════════════════════
-//  ПОРОЖНІЙ СТАН
-// ═══════════════════════════════════════════
 function showEmpty() {
   document.getElementById('sentence-type-text').textContent = 'No sentences found';
   document.getElementById('ua-sentence-text').textContent   = 'Change filters in the menu ↗';
   document.getElementById('rule-text').textContent          = '';
   document.getElementById('word-bank').innerHTML            = '';
-  clearSel();
-  clearFeedback();
-  renderAnswer();
+  clearSel(); clearFeedback(); renderAnswer();
 }
 
 // ═══════════════════════════════════════════
@@ -450,9 +569,8 @@ function animateCard(callback) {
   }, 230);
 }
 
-// ── Helpers ──
 function escHtml(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
 document.addEventListener('DOMContentLoaded', init);

@@ -127,7 +127,7 @@
 
 /* ── Тип речення ── */
 .sent-type-wrap { text-align: center; padding: 0 0 5px; }
-.sent-type-text { font-family: var(--font-display); font-size: 1.05rem; font-weight: 800; color: var(--text-primary); }
+.sent-type-text { font-family: var(--font-display); font-size: 1.25rem; font-weight: 800; color: var(--text-primary); }
 
 /* ── Шкала часу ── */
 .sent-scale-wrap { padding: 0 4px 8px; }
@@ -150,7 +150,7 @@
   background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.12);
   transition: left 0.35s cubic-bezier(0.4,0,0.2,1); z-index: 2;
 }
-.tense-scale-labels { display: flex; justify-content: space-between; font-size: 0.81rem; font-weight: 600; color: var(--text-secondary); padding: 0 12px; }
+.tense-scale-labels { display: flex; justify-content: space-between; font-size: 1.01rem; font-weight: 600; color: var(--text-secondary); padding: 0 12px; }
 .tense-form-affirmative { border: 2px solid var(--success) !important; color: var(--success); }
 .tense-form-negative    { border: 2px solid var(--danger)  !important; color: var(--danger); }
 .tense-form-question    { border: 2px solid var(--text-primary) !important; color: var(--text-primary); }
@@ -303,7 +303,7 @@
   .logo-small       { width: 150px; }
   .sentences-main   { padding: 4px 16px 8px; }
   .sent-card        { padding: 8px 14px 6px; }
-  .word-chip        { font-size: 1.1rem; min-height: 46px; }
+  .word-chip        { font-size: 1.25rem; min-height: 46px; }
   .sentence-actions { padding: 10px 16px 16px; }
   .sentence-actions .btn { font-size: 0.82rem; min-height: 46px; }
   .sent-rule-text  {

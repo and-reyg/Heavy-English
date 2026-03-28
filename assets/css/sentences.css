@@ -303,7 +303,7 @@
   .logo-small       { width: 150px; }
   .sentences-main   { padding: 4px 16px 8px; }
   .sent-card        { padding: 8px 14px 6px; }
-  .word-chip        { font-size: 1.25rem; min-height: 46px; }
+  .word-chip        { font-size: 1.15rem; min-height: 46px; }
   .sentence-actions { padding: 10px 16px 16px; }
   .sentence-actions .btn { font-size: 0.82rem; min-height: 46px; }
   .sent-rule-text  {

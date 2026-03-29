@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<!-- grammar.html — Граматичні правила — Heavy English -->
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Grammar Rules — Heavy English</title>
+  <link rel="stylesheet" href="assets/css/main.css" />
+  <link rel="stylesheet" href="assets/css/grammar.css" />
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+</head>
+<body class="grammar-page">
+
+  <!-- ══ HEADER ══ -->
+  <header class="grammar-header">
+    <a href="sentences.html" class="grammar-back-btn" aria-label="Назад">
+      <span class="back-arrow">←</span>
+    </a>
+    <div class="grammar-header-title">Grammar Rules</div>
+    <!-- Права частина — пуста, для балансу -->
+    <div class="grammar-header-spacer"></div>
+  </header>
+
+  <!-- ══ КОНТЕНТ ══ -->
+  <main class="grammar-main">
+
+    <!-- PRESENT SIMPLE -->
+    <div class="tense-card" id="tense-present-simple">
+      <button class="tense-header" aria-expanded="false" data-target="present-simple-body">
+        <span class="tense-title">Present Simple</span>
+        <span class="tense-badge badge-present">Present</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="present-simple-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Регулярні дії, факти, звички, розкладу. Маркери: <em>always, often, usually, every day, never, sometimes</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + V1<span class="formula-note"> (he/she/it → V + s/es)</span></div>
+          <div class="form-examples">
+            <div class="ex">I <strong>work</strong> every day.</div>
+            <div class="ex">She <strong>works</strong> in an office.</div>
+            <div class="ex">They <strong>play</strong> football on Sundays.</div>
+          </div>
+          <div class="form-note">⚠️ he/she/it: adds <strong>-s</strong> (play→plays), <strong>-es</strong> (go→goes, watch→watches), або <strong>-ies</strong> (study→studies)</div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>do/does</strong> + not + V1</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>do not</strong> work on weekends.</div>
+            <div class="ex">She <strong>does not</strong> like coffee.</div>
+          </div>
+          <div class="form-note">⚠️ he/she/it → <strong>does not</strong> (doesn't). Основне дієслово без -s!</div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Do/Does</strong> + subject + V1?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Do</strong> you speak English?</div>
+            <div class="ex"><strong>Does</strong> he work here?</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAST SIMPLE -->
+    <div class="tense-card" id="tense-past-simple">
+      <button class="tense-header" aria-expanded="false" data-target="past-simple-body">
+        <span class="tense-title">Past Simple</span>
+        <span class="tense-badge badge-past">Past</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="past-simple-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Завершені дії в минулому. Маркери: <em>yesterday, last week, in 2020, ago, when</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>V2</strong> (past form)</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>worked</strong> yesterday.</div>
+            <div class="ex">She <strong>visited</strong> Paris last year.</div>
+            <div class="ex">He <strong>went</strong> to school. (irregular)</div>
+          </div>
+          <div class="form-note">⚠️ Правильні: + <strong>-ed</strong>. Неправильні: окрема форма (go→went, see→saw, take→took)</div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>did not</strong> + V1</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>did not</strong> work yesterday.</div>
+            <div class="ex">She <strong>did not</strong> go to the party.</div>
+          </div>
+          <div class="form-note">⚠️ Після did/did not — завжди V1 (інфінітив без to)</div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Did</strong> + subject + V1?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Did</strong> you call me?</div>
+            <div class="ex"><strong>Did</strong> she finish the task?</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FUTURE SIMPLE -->
+    <div class="tense-card" id="tense-future-simple">
+      <button class="tense-header" aria-expanded="false" data-target="future-simple-body">
+        <span class="tense-title">Future Simple</span>
+        <span class="tense-badge badge-future">Future</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="future-simple-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Спонтанні рішення, передбачення, обіцянки. Маркери: <em>tomorrow, next week, soon, I think</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>will</strong> + V1</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>will</strong> call you tomorrow.</div>
+            <div class="ex">She <strong>will</strong> help us.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>will not</strong> + V1</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>will not</strong> be late.</div>
+            <div class="ex">They <strong>won't</strong> come tonight.</div>
+          </div>
+          <div class="form-note">⚠️ won't = will not (скорочення)</div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Will</strong> + subject + V1?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Will</strong> you help me?</div>
+            <div class="ex"><strong>Will</strong> it rain tomorrow?</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRESENT CONTINUOUS -->
+    <div class="tense-card" id="tense-present-continuous">
+      <button class="tense-header" aria-expanded="false" data-target="present-continuous-body">
+        <span class="tense-title">Present Continuous</span>
+        <span class="tense-badge badge-present">Present</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="present-continuous-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Дія відбувається зараз або тимчасово. Маркери: <em>now, right now, at the moment, currently, today, this week</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>am/is/are</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>am working</strong> right now.</div>
+            <div class="ex">She <strong>is reading</strong> a book.</div>
+            <div class="ex">They <strong>are playing</strong> football.</div>
+          </div>
+          <div class="form-note">⚠️ I → am · he/she/it → is · you/we/they → are</div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>am/is/are not</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>am not</strong> sleeping.</div>
+            <div class="ex">He <strong>is not</strong> driving a car.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Am/Is/Are</strong> + subject + V-ing?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Are</strong> you listening to me?</div>
+            <div class="ex"><strong>Is</strong> she cooking dinner?</div>
+          </div>
+        </div>
+
+        <div class="form-note-standalone">
+          ⚠️ Написання V-ing: відкритий склад з однією приголосною → подвоїти (run→running, sit→sitting). Кінцева -e → прибрати (make→making, come→coming).
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAST CONTINUOUS -->
+    <div class="tense-card" id="tense-past-continuous">
+      <button class="tense-header" aria-expanded="false" data-target="past-continuous-body">
+        <span class="tense-title">Past Continuous</span>
+        <span class="tense-badge badge-past">Past</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="past-continuous-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Дія тривала в конкретний момент у минулому або перервалась іншою. Маркери: <em>at 5 o'clock, when, while, at that moment</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>was/were</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>was sleeping</strong> at ten.</div>
+            <div class="ex">We <strong>were waiting</strong> for you.</div>
+          </div>
+          <div class="form-note">⚠️ I/he/she/it → was · you/we/they → were</div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>was/were not</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">He <strong>was not</strong> studying yesterday.</div>
+            <div class="ex">They <strong>were not</strong> playing football.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Was/Were</strong> + subject + V-ing?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Were</strong> they playing football?</div>
+            <div class="ex"><strong>Was</strong> it raining at noon?</div>
+          </div>
+        </div>
+
+        <div class="form-note-standalone">
+          💡 While + Past Continuous / when + Past Simple: <em>I was cooking <strong>when</strong> she called.</em>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FUTURE CONTINUOUS -->
+    <div class="tense-card" id="tense-future-continuous">
+      <button class="tense-header" aria-expanded="false" data-target="future-continuous-body">
+        <span class="tense-title">Future Continuous</span>
+        <span class="tense-badge badge-future">Future</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="future-continuous-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Дія буде тривати в певний момент у майбутньому. Маркери: <em>at this time tomorrow, at 5 pm, in an hour</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>will be</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>will be working</strong> at five.</div>
+            <div class="ex">They <strong>will be flying</strong> home.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>will not be</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">We <strong>will not be</strong> driving.</div>
+            <div class="ex">She <strong>won't be</strong> sleeping.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Will</strong> + subject + <strong>be</strong> + V-ing?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Will</strong> you <strong>be</strong> using this?</div>
+            <div class="ex"><strong>Will</strong> he <strong>be</strong> waiting for us?</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRESENT PERFECT -->
+    <div class="tense-card" id="tense-present-perfect">
+      <button class="tense-header" aria-expanded="false" data-target="present-perfect-body">
+        <span class="tense-title">Present Perfect</span>
+        <span class="tense-badge badge-present">Present</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="present-perfect-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Досвід, результат у теперішньому, дія нещодавно завершилась. Маркери: <em>already, yet, just, ever, never, for, since, recently</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>have/has</strong> + V3</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>have</strong> never <strong>been</strong> to Japan.</div>
+            <div class="ex">She <strong>has already finished</strong> the report.</div>
+          </div>
+          <div class="form-note">⚠️ I/you/we/they → have · he/she/it → has. V3 = 3-тя форма (seen, finished, gone)</div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>have/has not</strong> + V3</div>
+          <div class="form-examples">
+            <div class="ex">We <strong>have not seen</strong> that film.</div>
+            <div class="ex">He <strong>has not called</strong> me yet.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Have/Has</strong> + subject + V3?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Have</strong> you ever tried sushi?</div>
+            <div class="ex"><strong>Has</strong> she passed the exam?</div>
+          </div>
+        </div>
+
+        <div class="form-note-standalone">
+          💡 already (стверджувальне) / yet (питальне/заперечне) / just (щойно) / ever (коли-небудь) / never (ніколи).
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PAST PERFECT -->
+    <div class="tense-card" id="tense-past-perfect">
+      <button class="tense-header" aria-expanded="false" data-target="past-perfect-body">
+        <span class="tense-title">Past Perfect</span>
+        <span class="tense-badge badge-past">Past</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="past-perfect-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Дія завершилась до іншої дії в минулому. Маркери: <em>before, after, already, by the time, when (+ Past Simple)</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>had</strong> + V3</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>had already eaten</strong> when you called.</div>
+            <div class="ex">They <strong>had left</strong> before I arrived.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>had not</strong> + V3</div>
+          <div class="form-examples">
+            <div class="ex">She <strong>had not slept</strong> for two days.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Had</strong> + subject + V3?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Had</strong> you ever visited Rome before?</div>
+          </div>
+        </div>
+
+        <div class="form-note-standalone">
+          💡 Послідовність: дія 1 (Past Perfect) → дія 2 (Past Simple). <em>She had finished her work <strong>before</strong> he arrived.</em>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- FUTURE PERFECT -->
+    <div class="tense-card" id="tense-future-perfect">
+      <button class="tense-header" aria-expanded="false" data-target="future-perfect-body">
+        <span class="tense-title">Future Perfect</span>
+        <span class="tense-badge badge-future">Future</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="future-perfect-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Дія завершиться до певного моменту в майбутньому. Маркери: <em>by tomorrow, by the time, by next year</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>will have</strong> + V3</div>
+          <div class="form-examples">
+            <div class="ex">I <strong>will have finished</strong> by 5 pm.</div>
+            <div class="ex">She <strong>will have left</strong> by the time you arrive.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>will not have</strong> + V3</div>
+          <div class="form-examples">
+            <div class="ex">We <strong>will not have</strong> arrived by then.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Will</strong> + subject + <strong>have</strong> + V3?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Will</strong> you <strong>have</strong> finished by noon?</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRESENT PERFECT CONTINUOUS -->
+    <div class="tense-card" id="tense-present-perfect-continuous">
+      <button class="tense-header" aria-expanded="false" data-target="present-perfect-continuous-body">
+        <span class="tense-title">Present Perfect Continuous</span>
+        <span class="tense-badge badge-present">Present</span>
+        <span class="tense-chevron">▾</span>
+      </button>
+      <div class="tense-body" id="present-perfect-continuous-body" hidden>
+
+        <div class="tense-use">
+          <span class="use-icon">📌</span>
+          Дія почалась у минулому, триває й досі або щойно завершилась (і є видимий результат). Маркери: <em>for, since, how long, all day, lately, recently</em>.
+        </div>
+
+        <div class="form-block form-aff">
+          <div class="form-label">✓ Affirmative</div>
+          <div class="form-formula">Subject + <strong>have/has been</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">She <strong>has been learning</strong> English for two years.</div>
+            <div class="ex">I <strong>have been waiting</strong> here for an hour.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-neg">
+          <div class="form-label">✕ Negative</div>
+          <div class="form-formula">Subject + <strong>have/has not been</strong> + V-ing</div>
+          <div class="form-examples">
+            <div class="ex">He <strong>has not been sleeping</strong> well lately.</div>
+          </div>
+        </div>
+
+        <div class="form-block form-q">
+          <div class="form-label">? Question</div>
+          <div class="form-formula"><strong>Have/Has</strong> + subject + <strong>been</strong> + V-ing?</div>
+          <div class="form-examples">
+            <div class="ex"><strong>Have</strong> you <strong>been</strong> waiting long?</div>
+            <div class="ex"><strong>Has</strong> she <strong>been</strong> working here since June?</div>
+          </div>
+        </div>
+
+        <div class="form-note-standalone">
+          💡 for + тривалість (for 2 hours), since + початок (since Monday). Акцент на тривалості процесу, а не на результаті.
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script src="assets/js/grammar.js"></script>
+</body>
+</html>

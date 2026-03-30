@@ -57,9 +57,9 @@ let currentSentence = null;
 let selectedWords   = [];
 let selectedIndexes = [];
 let currentWordBank = [];
-let autoSpeak       = false;
+let autoSpeak       = true;
 let feedbackTimer   = null;
-let useGroups       = false;
+let useGroups       = true;
 
 // ── Цикл показу ───────────────────────────
 // cycleQueue     — масив ID поточного циклу (перемішаний), ще не показані

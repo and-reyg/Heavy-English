@@ -309,6 +309,7 @@
   .sent-rule-text  {
     font-size: 1 rem;
   }
+  .word-bank-scroll {max-height: 250px;}
 }
 @media (max-width: 380px) {
   .logo-small     { width: 120px; }

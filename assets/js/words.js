@@ -18,20 +18,19 @@ function qualityToState(q) {
 
 // Cooldown: мінімум карток між показами одного слова
 function getCooldown(q) {
-  if (q === null || q === undefined) return 0;   // new — показувати одразу
-  if (q === 0)  return 5;   // weak
-  if (q === 1)  return 12;  // familiar 1
-  if (q === 2)  return 25;  // familiar 2
-  //return 60;                // known
+  if (q === null || q === undefined) return 0;
+  if (q === 0)  return 5;
+  if (q === 1)  return 12;
+  if (q === 2)  return 25;
   return 60 + (q - 3) * 20;
 }
 
 // Ваги для вибору групи
-const WEIGHTS = { 
-  new: 4, 
-  weak: 5, 
-  familiar: 3, 
-  known: 0.5 
+const WEIGHTS = {
+  new: 4,
+  weak: 5,
+  familiar: 3,
+  known: 0.5
 };
 
 const STORAGE_KEY   = 'wordsProgress';
@@ -40,9 +39,14 @@ const CARDIDX_KEY   = 'wordsCardIndex';
 // ── Стан додатку ──────────────────────────
 let allWords    = [];
 let progress    = {};   // { "id": { quality, seen, seenAt } }
-let cardIndex   = 0;    // лічильник карток — зростає кожен раз
+let cardIndex   = 0;    // лічильник карток
 let currentWord = null;
 let showEnglish = true;
+
+// ── Рахунок сесії ─────────────────────────
+// Кількість слів, що перейшли в статус "known" за поточну сесію.
+// Живе лише в пам'яті — скидається при перезавантаженні сторінки.
+let sessionScore = 0;
 
 // ── DOM ───────────────────────────────────
 const btnEn   = document.getElementById('btn-en');
@@ -68,14 +72,16 @@ const elWordUaMain      = document.getElementById('word-ua-main');
 const elTranscription   = document.getElementById('word-transcription');
 const elTranslationText = document.getElementById('word-ua');
 
-// Кнопки озвучення (необов'язкові елементи)
 const speakBtn   = document.getElementById('speak-btn');
 const speakBtnUa = document.getElementById('speak-btn-ua');
 
-// Блок форм дієслова (необов'язковий)
 const formsBlock = document.getElementById('word-forms-block');
 const formPast   = document.getElementById('form-past');
 const formPP     = document.getElementById('form-pp');
+
+// Елементи лічильника в хедері
+const elSessionScore = document.getElementById('session-score');
+const elKnownRatio   = document.getElementById('known-ratio');
 
 // ═══════════════════════════════════════════
 //  ІНІЦІАЛІЗАЦІЯ
@@ -92,6 +98,7 @@ async function init() {
   loadProgress();
   showNextWord();
   updateProgressBar();
+  updateHeaderCounter();
 
   // Мова
   btnEn.addEventListener('click', () => setLang(true));
@@ -145,20 +152,82 @@ function getWordData(id) {
 }
 
 // ═══════════════════════════════════════════
+//  ЛІЧИЛЬНИК У ХЕДЕРІ
+// ═══════════════════════════════════════════
+
+/**
+ * Повертає кількість слів з будь-яким позитивним прогресом (quality >= 1).
+ * Тобто слова, на які хоча б раз натиснули Know.
+ */
+function countKnown() {
+  let count = 0;
+
+  for (const word of allWords) {
+    const d = getWordData(word.id);
+    if (qualityToState(d.quality) === 'known') count++;
+  }
+
+  return count;
+}
+
+/**
+ * Оновлює відображення лічильника в хедері.
+ * Формат: "+12 312/5000"  або  "312/5000" (якщо сесія порожня)
+ */
+function updateHeaderCounter() {
+  if (!elKnownRatio || !allWords.length) return;
+
+  const known = countKnown();
+  const total = allWords.length;
+
+  // Ratio
+  elKnownRatio.textContent = `${known}/${total}`;
+
+  // Session score
+  if (elSessionScore) {
+    if (sessionScore > 0) {
+      elSessionScore.textContent = `+${sessionScore}`;
+      elSessionScore.style.display = 'flex';
+    } else {
+      elSessionScore.style.display = 'none';
+    }
+  }
+}
+
+/**
+ * Збільшує рахунок сесії та анімує його.
+ */
+function incrementSessionScore() {
+  sessionScore++;
+
+  if (!elSessionScore) return;
+
+  // Якщо перше нарахування — показати з анімацією появи
+  if (sessionScore === 1) {
+    elSessionScore.textContent = `+${sessionScore}`;
+    elSessionScore.style.display = 'flex';
+    // Анімація вже в CSS через display:flex (scorePopIn)
+  } else {
+    // Bump-анімація при збільшенні
+    elSessionScore.textContent = `+${sessionScore}`;
+    elSessionScore.classList.remove('bump');
+    // Форс-рефлоу щоб анімація спрацювала знову
+    void elSessionScore.offsetWidth;
+    elSessionScore.classList.add('bump');
+  }
+}
+
+// ═══════════════════════════════════════════
 //  ВИБІР НАСТУПНОГО СЛОВА
 // ═══════════════════════════════════════════
 
-/** Чи минув cooldown для слова */
 function isEligible(word) {
-  if (word.id === currentWord?.id) return false; // поточне слово — завжди виключаємо
+  if (word.id === currentWord?.id) return false;
   const d = getWordData(word.id);
-
-  if (cardIndex - d.seenAt < 2) return false; //від гпт
-
+  if (cardIndex - d.seenAt < 2) return false;
   return (cardIndex - d.seenAt) >= getCooldown(d.quality);
 }
 
-/** Групуємо eligible слова за станом */
 function buildGroups() {
   const groups = { new: [], weak: [], familiar: [], known: [] };
 
@@ -168,7 +237,6 @@ function buildGroups() {
     groups[state].push(word);
   }
 
-  // Якщо всі слова на cooldown — прибираємо обмеження (крім поточного)
   const total = Object.values(groups).reduce((s, g) => s + g.length, 0);
   if (total === 0) {
     for (const word of allWords) {
@@ -181,7 +249,6 @@ function buildGroups() {
   return groups;
 }
 
-/** Зважений вибір групи */
 function pickGroup(groups) {
   const available = Object.entries(WEIGHTS)
     .filter(([state]) => groups[state].length > 0)
@@ -221,20 +288,16 @@ function showNextWord() {
 }
 
 function renderWord(word) {
-  // EN поля
   elWordEn.textContent          = word.en;
   elTranscription.textContent   = word.transcription;
   elTranslationText.textContent = word.ua;
-
-  // UA поля
-  elWordUaMain.textContent = word.ua;
+  elWordUaMain.textContent      = word.ua;
 
   const uaTransText = uaTranslationBlock.querySelector('.word-translation-text');
   const uaTransIPA  = uaTranslationBlock.querySelector('.word-transcription');
   if (uaTransText) uaTransText.textContent = word.en;
   if (uaTransIPA)  uaTransIPA.textContent  = word.transcription;
 
-  // Форми дієслова (якщо є)
   if (formsBlock) {
     if (word.forms && (word.forms.past || word.forms.v3)) {
       if (formPast) formPast.textContent = word.forms.past ? `Past: ${word.forms.past}` : '';
@@ -245,7 +308,6 @@ function renderWord(word) {
     }
   }
 
-  // Приклади
   fillExamples(enExamplesBlock, word);
   fillExamples(uaExamplesBlock, word);
 
@@ -278,39 +340,58 @@ function handleAnswer(knew) {
 
   const id = currentWord.id;
   const d  = getWordData(id);
-  const q  = d.quality; // може бути null (new)
+  const q  = d.quality;
 
+  // 🧠 Запам'ятали попередній стан
+  const prevState = qualityToState(q);
+
+  // ═══════════════════════════════
+  //  ЛОГІКА KNOW / DON'T KNOW
+  // ═══════════════════════════════
   if (knew) {
+    // 🟢 Нове слово → одразу known
     if (q === null) {
-      // Знав з першого разу → fast track: quality=2
-      // Ще 1 "Know" і буде KNOWN
-      d.quality = 2;
-    } else if (q === 0 || q === 1) {
-      // Слабке знання → підвищуємо на 1
+      d.quality = 5;
+    }
+    // 🟡 Після помилки → поступове навчання
+    else if (q === 0) {
+      d.quality = 1;
+    }
+    else if (q === 1 || q === 2) {
       d.quality = q + 1;
-    } else if (q === 2) {
-      // Familiar → KNOWN
-      d.quality = 3;
-    } else {
-      // KNOWN → залишається, але не нескінченно зростає
+    }
+    else {
       d.quality = Math.min(q + 1, 5);
     }
   } else {
-    // Не знав
-    if (q === null || q === 0 || q === 1 || q === 2) {
-      // NEW / WEAK / FAMILIAR → падає в WEAK
+    // ❌ DON'T KNOW
+    if (q === null || q <= 2) {
       d.quality = 0;
     } else {
-      // KNOWN → падає в FAMILIAR (не в WEAK — вже вчив)
-      d.quality = 2;
+      d.quality = 2; // якщо було known → не в нуль, а назад у навчання
     }
   }
 
-  d.seen    = (d.seen || 0) + 1;
-  d.seenAt  = cardIndex;
+  // ═══════════════════════════════
+  //  ОНОВЛЕННЯ ДАНИХ
+  // ═══════════════════════════════
+  d.seen   = (d.seen || 0) + 1;
+  d.seenAt = cardIndex;
 
   progress[id] = d;
   saveProgress();
+
+  // 🧠 Новий стан після зміни
+  const newState = qualityToState(d.quality);
+
+  // ✅ Session score тільки якщо стало known
+  if (newState === 'known' && prevState !== 'known') {
+    incrementSessionScore();
+  }
+
+  // 🔄 Оновлюємо UI
+  updateHeaderCounter();
+
   animateCard(knew);
 }
 
@@ -319,8 +400,7 @@ function handleAnswer(knew) {
 // ═══════════════════════════════════════════
 function updateProgressBar() {
   if (!allWords.length || !progressFill) return;
-  const known = Object.values(progress)
-    .filter(d => qualityToState(d.quality) === 'known').length;
+  const known = countKnown();
   progressFill.style.width = Math.round((known / allWords.length) * 100) + '%';
 }
 

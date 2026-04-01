@@ -17,11 +17,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;          /* дозволяє другий рядок на мобільних */
   position: relative;
-  padding-top: 20px;    /* Регулюйте цей відступ від верхнього краю екрана */
-  padding-bottom: 28px;  /* Відступ від логотипа до наступного елемента (картки) */
-  padding-left: 28px;   /* Боковий відступ зліва */
-  padding-right: 28px;  /* Боковий відступ справа */
+  padding-top: 20px;
+  padding-bottom: 28px;
+  padding-left: 28px;
+  padding-right: 28px;
+  gap: 0;
 }
 
 /* ── Логотип-посилання ── */
@@ -82,6 +84,66 @@
   pointer-events: none;
 }
 
+/* ════════════════════════════════════
+   ЛІЧИЛЬНИК ПРОГРЕСУ В ХЕДЕРІ
+   ════════════════════════════════════ */
+.header-progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  /* Десктоп: по центру між лого і мовою */
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Рахунок за сесію: "+12" */
+.session-score {
+  font-family: var(--font-display);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #22c55e;            /* зелений */
+  letter-spacing: 0.04em;
+  display: none;             /* прихований поки score = 0 */
+  align-items: center;
+  gap: 2px;
+  animation: scorePopIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.session-score::before {
+  content: '↑';              /* стрілка вгору */
+  font-size: 0.78rem;
+  line-height: 1;
+}
+
+/* Знаю/всього: "312/5000" */
+.known-ratio {
+  font-family: var(--font-display);
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* Анімація появи score */
+@keyframes scorePopIn {
+  from { opacity: 0; transform: scale(0.7) translateY(4px); }
+  to   { opacity: 1; transform: scale(1)   translateY(0);   }
+}
+
+/* Анімація bump при збільшенні */
+@keyframes scoreBump {
+  0%   { transform: scale(1); }
+  40%  { transform: scale(1.25); }
+  100% { transform: scale(1); }
+}
+
+.session-score.bump {
+  animation: scoreBump 0.28s ease;
+}
+
 
 /* ════════════════════════════════════
    ОСНОВНИЙ ЛЕЙАУТ
@@ -117,10 +179,9 @@
   overflow: hidden;
   margin-bottom: 18px;
 
-  /* Додаємо ці властивості для центрування вмісту картки */
   display: flex;
   flex-direction: column;
-  align-items: center; 
+  align-items: center;
   text-align: center;
 }
 
@@ -134,6 +195,7 @@
   height: 3px;
   background: linear-gradient(90deg, #1A1A1A 0%, #888 100%);
 }
+
 /* ── Головне слово ── */
 .word-main {
   font-family: var(--font-display);
@@ -176,10 +238,9 @@
   cursor: pointer;
   opacity: 0.7;
   transition: opacity 0.2s ease, transform 0.1s ease;
-  /* Додайте ці рядки: */
   display: inline-flex;
   align-items: center;
-  transform: translateY(2px); /* Піднімає кнопку на 2 пікселі вгору */
+  transform: translateY(2px);
 }
 
 .speak-btn:hover {
@@ -361,15 +422,6 @@
    АДАПТИВ
    ════════════════════════════════════ */
 @media (max-width: 520px) {
-  /*
-  .words-header {
-    padding-top: 12px;    
-    padding-bottom: 8px;  
-    padding-left: 20px;   
-    padding-right: 20px;  
-  }
-    */
-
   .word-card {
     padding: 36px 24px 32px;
   }
@@ -387,10 +439,23 @@
     padding: 14px 18px;
     font-size: 0.88rem;
   }
+
+  /* На мобільних: лічильник виходить на другий рядок і центрується */
+  .header-progress {
+    position: static;          /* скасовуємо absolute */
+    transform: none;
+    order: 3;                  /* після лого (1) і lang-toggle (2) */
+    width: 100%;
+    justify-content: center;
+    padding-bottom: 4px;
+    margin-top: 20px;         /* підтягуємо ближче */
+  }
 }
 
 
-/* irregular verbs */
+/* ════════════════════════════════════
+   ФОРМИ НЕПРАВИЛЬНИХ ДІЄСЛІВ
+   ════════════════════════════════════ */
 .word-forms-block {
   overflow: hidden;
   max-height: 0;
@@ -423,13 +488,13 @@
 
 .word-forms-inline {
   display: flex;
-  gap: 12px;            /* проміжок між Past та V3 */
+  gap: 12px;
   font-size: 1.25rem;
   color: var(--text-secondary);
 }
 
 .word-forms-inline span {
-  background: rgba(49, 166, 255, 0.1); /* легкий блакитний фон */
+  background: rgba(49, 166, 255, 0.1);
   padding: 2px 6px;
   border-radius: 4px;
   font-weight: 500;
